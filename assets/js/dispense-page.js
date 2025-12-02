@@ -1,5 +1,6 @@
 // Dispense page script - handles dispensing after game completion
 let checkInterval = null;
+let isDispensing = false; // Flag to prevent multiple dispense triggers
 
 async function logErrorToServer(functionName, errorMessage) {
     try {
@@ -16,6 +17,13 @@ async function logErrorToServer(functionName, errorMessage) {
 }
 
 async function triggerDispense() {
+    // Prevent multiple triggers
+    if (isDispensing) {
+        console.log('Dispense already in progress, ignoring duplicate trigger');
+        return;
+    }
+    
+    isDispensing = true;
     const statusDiv = document.getElementById('status');
     const progressBar = document.getElementById('progressBar');
     
@@ -97,7 +105,7 @@ function startCheckingForCompletion(timestamp) {
                 clearInterval(progressInterval);
                 progressBar.style.width = '100%';
                 statusDiv.textContent = 'Dispense completed successfully!';
-                statusDiv.style.color = 'green';
+                statusDiv.style.color = '#ffffff';
                 
                 // Redirect to index page after 2 seconds
                 setTimeout(() => {
