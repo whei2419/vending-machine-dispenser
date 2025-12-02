@@ -31,8 +31,11 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-var timer = 600;
+var timer = 30;
 var score = 0;
+var object1Score = 0;
+var object2Score = 0;
+var object3Score = 0;
 
 var countdownText;
 var timerText;
@@ -111,7 +114,7 @@ function create() {
     const bowlHeight = this.bowl.displayHeight;
 
     // Create a container to hold the bowl
-    this.bowlContainer = this.add.container(this.cameras.main.centerX, this.cameras.main.height - 200, [this.bowl]);
+    this.bowlContainer = this.add.container(this.cameras.main.centerX, this.cameras.main.height - 250, [this.bowl]);
     this.bowlContainer.setSize(bowlWidth, bowlHeight);
     this.physics.world.enable(this.bowlContainer);
     this.bowlContainer.body.setCollideWorldBounds(true);
@@ -136,7 +139,7 @@ function create() {
     this.physics.add.existing(this.timerContainerBg, true);
 
     // Adjust the X and Y values below to position the timer text
-    this.timerText = this.add.text(this.cameras.main.width - 480, 117, '10:00', {
+    this.timerText = this.add.text(this.cameras.main.width - 490, 117, '00:30', {
         fontFamily: 'HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec', // Adjust font size here
         fontSize: '40px',
         color: "#FFFFFF",
@@ -353,7 +356,7 @@ function updateTimer() {
 
         // Redirect to finish page after a delay
         this.time.delayedCall(2000, () => {
-            window.location.href = `finish.html?score=${score}&lang=${lang}`;
+            window.location.href = `finish.html?score=${score}&obj1=${object1Score}&obj2=${object2Score}&obj3=${object3Score}&lang=${lang}`;
         });
     }
 }
@@ -365,9 +368,20 @@ function catchItem(bowlContainer, item) {
     }
 
     const points = item.getData('points');
+    const objectKey = item.texture.key;
 
     if (points) {
         score += points;
+        
+        // Track individual object scores
+        if (objectKey === 'goodObject_1') {
+            object1Score += points;
+        } else if (objectKey === 'goodObject_2') {
+            object2Score += points;
+        } else if (objectKey === 'goodObject_3') {
+            object3Score += points;
+        }
+        
         this.scoreText.setText(score);
         this.collectSound.play();
 
