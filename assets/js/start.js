@@ -12,23 +12,23 @@ window.onload = function () {
     const videoContainer = document.querySelector('.video');
 
     if (lang === 'chinese') {
-        body.style.backgroundImage = "url('../assets/startcn.png')";
+        body.style.backgroundImage = "url('assets/startcn.png')";
         startButton.innerText = "开始";
         selectedLang = 'chinese';
     } else {
-        body.style.backgroundImage = "url('../assets/dutch/start.webp')"; 
+        body.style.backgroundImage = "url('assets/dutch/start.webp')"; 
         startButton.innerText = "Start";
         selectedLang = 'english';
     }
 
     function handleInteraction() {
         startButton.classList.add('loading');
-        const clickSound = new Audio('../assets/audio/select-sound.mp3');
-        const completeSound = new Audio('../assets/audio/completed.mp3');
+        const clickSound = new Audio('assets/audio/select-sound.mp3');
+        const completeSound = new Audio('assets/audio/completed.mp3');
         clickSound.play(); 
         hoverTimer = setTimeout(function () {
             completeSound.play();
-            window.location.href = `instruction.html?lang=${selectedLang}`;
+            window.location.href = `pages/instruction.html?lang=${selectedLang}`;
         }, 1000); 
     }
 
