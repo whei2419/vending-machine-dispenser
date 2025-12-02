@@ -42,6 +42,9 @@ async function triggerDispense() {
         
         const message = `D;${timestamp}`;
         
+        // Save timestamp to session storage for reload recovery
+        sessionStorage.setItem('dispenseTimestamp', timestamp);
+        
         statusDiv.textContent = 'Sending dispense command...';
         progressBar.style.width = '30%';
         
@@ -72,6 +75,10 @@ async function triggerDispense() {
         statusDiv.style.color = 'red';
         progressBar.style.width = '0%';
         progressBar.style.backgroundColor = 'red';
+        
+        // Clear the dispense flags on error
+        sessionStorage.removeItem('dispenseTriggered');
+        sessionStorage.removeItem('dispenseTimestamp');
         
         // Redirect to index after error (5 seconds)
         setTimeout(() => {
@@ -107,6 +114,10 @@ function startCheckingForCompletion(timestamp) {
                 statusDiv.textContent = 'Dispense completed successfully!';
                 statusDiv.style.color = '#ffffff';
                 
+                // Clear the dispense flags
+                sessionStorage.removeItem('dispenseTriggered');
+                sessionStorage.removeItem('dispenseTimestamp');
+                
                 // Redirect to index page after 2 seconds
                 setTimeout(() => {
                     window.location.href = '../index.html';
@@ -128,6 +139,10 @@ function startCheckingForCompletion(timestamp) {
             statusDiv.textContent = 'Dispense timeout - please contact support';
             statusDiv.style.color = 'orange';
             
+            // Clear the dispense flags on timeout
+            sessionStorage.removeItem('dispenseTriggered');
+            sessionStorage.removeItem('dispenseTimestamp');
+            
             // Redirect to index after timeout
             setTimeout(() => {
                 window.location.href = '../index.html';
@@ -138,5 +153,24 @@ function startCheckingForCompletion(timestamp) {
 
 // Auto-trigger dispense when page loads
 window.onload = function() {
+    // Check if dispense has already been triggered in this session
+    const dispenseTriggered = sessionStorage.getItem('dispenseTriggered');
+    const dispenseTimestamp = sessionStorage.getItem('dispenseTimestamp');
+    
+    if (dispenseTriggered && dispenseTimestamp) {
+        console.log('Dispense already triggered, continuing to check for completion');
+        const statusDiv = document.getElementById('status');
+        const progressBar = document.getElementById('progressBar');
+        
+        statusDiv.textContent = 'Checking dispense status...';
+        progressBar.style.width = '70%';
+        
+        // Continue checking for the existing dispense completion
+        startCheckingForCompletion(dispenseTimestamp);
+        return;
+    }
+    
+    // Mark dispense as triggered for this session
+    sessionStorage.setItem('dispenseTriggered', 'true');
     triggerDispense();
 };
