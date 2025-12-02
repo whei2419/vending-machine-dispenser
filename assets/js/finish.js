@@ -39,13 +39,13 @@ window.onload = function () {
 
     function handleInteraction() {
         if (isProcessing) return;
-        isProcessing = true;
         
         startButton.classList.add('loading');
         const clickSound = new Audio('../assets/audio/select-sound.mp3');
         const completeSound = new Audio('../assets/audio/completed.mp3');
         clickSound.play();
         hoverTimer = setTimeout(function () {
+            isProcessing = true;
             completeSound.play();
             setTimeout(function () {
                 // Only redirect if score is valid (player actually played the game)
@@ -63,7 +63,9 @@ window.onload = function () {
     startButton.addEventListener('click', handleInteraction);
 
     startButton.addEventListener('mouseout', function () {
-        startButton.classList.remove('loading');
-        clearTimeout(hoverTimer);
+        if (!isProcessing) {
+            startButton.classList.remove('loading');
+            clearTimeout(hoverTimer);
+        }
     });
 }
