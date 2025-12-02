@@ -27,7 +27,7 @@ h1 {
 }
 
 #dispenseBtn {
-    background: #2196F3;
+    background: #F37021;
     color: white;
     border: none;
     padding: 15px 35px;
@@ -41,15 +41,15 @@ h1 {
 }
 
 #dispenseBtn:hover {
-    background: #1976D2;
+    background: #D95E1A;
 }
 
 #dispenseBtn:active {
-    background: #0D47A1;
+    background: #C04F14;
 }
 
 #dispenseBtn:disabled {
-    background: #90CAF9;
+    background: #F9A16E;
     cursor: not-allowed;
 }
 
