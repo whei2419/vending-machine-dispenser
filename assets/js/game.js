@@ -10,6 +10,11 @@ var config = {
     width: window.innerWidth,
     height: window.innerHeight,
     parent: 'gameContainer',
+    render: {
+        antialias: true,
+        pixelArt: false,
+        roundPixels: true
+    },
     physics: {
         default: 'arcade',
         arcade: {
