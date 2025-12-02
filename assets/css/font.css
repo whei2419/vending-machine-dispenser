@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec';
-    src: url('assets/font/HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec.otf') format('opentype'); 
+    src: url('../fonts/HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec.otf') format('opentype'); 
 }
 
 html, body {
@@ -14,7 +14,7 @@ html, body {
 
 
   body {
-    cursor: url('assets/cursor.png') 16 16, auto !important;
+    /* cursor: url('../cursor.png') 16 16, auto !important; */
   }
 
 
@@ -49,8 +49,8 @@ button {
 
 button:hover, button:focus {
   transform: scale(1.08);
-  box-shadow: 0 0 0 4px #0060AC, 0 6px 18px rgba(0,0,0,0.18);
-  background: linear-gradient(90deg, #0060AC 0%, #00408C 100%);
+  box-shadow: 0 0 0 4px #D95E1A, 0 6px 18px rgba(0,0,0,0.18);
+  background: #D95E1A;
   color: #ffffff;
   border-color: #ffffff;
 }

@@ -11,7 +11,7 @@ body {
 .start-button {
     background-color: #F37021;
     color: white;
-    border: 2px solid white;
+    border: 2px solid #F37021;
     font-size: 48px;
     cursor: pointer;
     width: 400px;
@@ -23,18 +23,13 @@ body {
     justify-content: center;
 }
 
-.start-button:hover {
-    opacity: 0.8;
-}
-
 .start-button.loading::after {
     content: '';
     position: absolute;
     width: 20px;
     height: 20px;
-    right: 40px;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 20px;
+    top: 20px;
     border: 3px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     border-top-color: white;
