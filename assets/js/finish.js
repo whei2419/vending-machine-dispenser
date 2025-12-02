@@ -44,8 +44,13 @@ window.onload = function () {
         hoverTimer = setTimeout(function () {
             completeSound.play();
             setTimeout(function () {
-                // Redirect to dispense page instead of index
-                window.location.href = `dispense.html?lang=${selectedLang}`;
+                // Only redirect if score is valid (player actually played the game)
+                if (score && parseInt(score) >= 0) {
+                    window.location.href = `dispense.html?lang=${selectedLang}`;
+                } else {
+                    // Skip dispense if no valid score
+                    window.location.href = `../index.html?lang=${selectedLang}`;
+                }
             }, 500);
         }, 1000);
     }

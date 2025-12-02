@@ -43,18 +43,18 @@ async function triggerDispense() {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: 'message=' + encodeURIComponent(message)
+            body: 'action=' + encodeURIComponent(message)
         });
         
-        const result = await response.json();
+        const result = await response.text();
         
-        if (result.status === 'success') {
+        if (result.includes('Success')) {
             statusDiv.textContent = 'Dispensing in progress...';
             progressBar.style.width = '50%';
             // Start checking for completion
             startCheckingForCompletion(timestamp);
         } else {
-            throw new Error(result.message || 'Failed to trigger dispense');
+            throw new Error(result || 'Failed to trigger dispense');
         }
         
     } catch (error) {
