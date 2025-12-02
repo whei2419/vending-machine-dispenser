@@ -60,7 +60,7 @@ function preload() {
     });
 
     this.load.spritesheet('explosion', '../assets/images/exp.png' + cacheBuster, { frameWidth: 300, frameHeight: 300 });
-    this.load.image('countdown', '../assets/images/countdown.png' + cacheBuster);
+    this.load.image('countdown', '../assets/images/countdown.webp' + cacheBuster);
     this.load.image('clock', '../assets/images/clock.png' + cacheBuster);
     this.load.image('bowl', '../assets/dutch/bowl.webp' + cacheBuster);
     this.load.image('logo', '../assets/dutch/logo.webp' + cacheBuster);
@@ -161,8 +161,8 @@ function create() {
         this.cameras.main.centerY,
         this.cameras.main.width,
         this.cameras.main.height,
-        0xffffff,
-        0.6
+        0x000000,
+        0.3
     ).setDepth(999).setAlpha(0);
     this.tweens.add({
         targets: this.countdownOverlay,
@@ -174,12 +174,12 @@ function create() {
     this.countdownBg = this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'countdown')
         .setOrigin(0.5)
         .setDepth(1000)
-        .setDisplaySize(480, 320)
+        .setDisplaySize(130, 85)
         .setAlpha(0.95)
-        .setScale(0.7);
+        .setScale(0.5);
     this.tweens.add({
         targets: this.countdownBg,
-        scale: 1,
+        scale: 0.55,
         duration: 400,
         ease: 'Back.Out'
     });
@@ -187,7 +187,7 @@ function create() {
     this.countdownText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, '3', {
         fontFamily: 'HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec',
         fontSize: '200px',
-        color: "#063591",
+        color: "#F37021",
         fontStyle: 'bold'
     }).setOrigin(0.5).setDepth(1001);
 
