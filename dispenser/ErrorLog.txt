@@ -1,0 +1,4 @@
+[2025-12-02 19:39:56] No action provided in POST request
+[2025-12-02 19:39:56] JS Error in triggerDispense: Unexpected token 'E', "Error: No "... is not valid JSON
+[2025-12-02 19:44:42] No action provided in POST request
+[2025-12-02 19:44:42] JS Error in triggerDispense: Unexpected token 'E', "Error: No "... is not valid JSON

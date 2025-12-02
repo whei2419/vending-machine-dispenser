@@ -44,7 +44,8 @@ window.onload = function () {
         hoverTimer = setTimeout(function () {
             completeSound.play();
             setTimeout(function () {
-                window.location.href = `../index.html?lang=${selectedLang}`;
+                // Redirect to dispense page instead of index
+                window.location.href = `dispense.html?lang=${selectedLang}`;
             }, 500);
         }, 1000);
     }
