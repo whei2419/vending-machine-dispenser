@@ -38,52 +38,39 @@ var isPaused = false;
 
 const params = new URLSearchParams(window.location.search);
 const lang = params.get('lang');
+const cacheBuster = '?v=' + Date.now();
 
 function preload() {
-    this.load.audio('explosionSound', '../assets/audio/bomb effects.mp3');
     this.load.audio('collectSound', '../assets/audio/collect bird nest.mp3');
     this.load.audio('win', '../assets/audio/game won.mp3');
     this.load.audio('countDown', '../assets/audio/countdownsound.mp3');
     this.load.audio('bg-sound', '../assets/audio/bg.mp3');
-    this.load.audio('wrongitem', '../assets/audio/wrong item.mp3');
     this.load.audio('buzzer', '../assets/audio/long-buzzer.mp3');
-    this.load.audio('collect7Sound', '../assets/audio/game won.mp3');
 
-    this.load.image('backgroundEn', '../assets/images/bg.png');
-    this.load.image('backgroundCh', '../assets/images/bgCh.png');
-    this.load.image('gamebg', '../assets/dutch/mainBackground.webp');  
+    this.load.image('gamebg', '../dutch/mainBackground.webp' + cacheBuster);  
     
     // Load good objects from folder and parse points from filename
     this.goodObjects = [
-        { key: 'goodObject_1_1', path: '../assets/dutch/fallingObjects/1 point (1).webp', points: 1 },
-        { key: 'goodObject_1_2', path: '../assets/dutch/fallingObjects/1 point (2).webp', points: 1 },
-        { key: 'goodObject_1_3', path: '../assets/dutch/fallingObjects/1 point (3).webp', points: 1 },
-        { key: 'goodObject_1_4', path: '../assets/dutch/fallingObjects/1 point (4).webp', points: 1 },
-        { key: 'goodObject_1_5', path: '../assets/dutch/fallingObjects/1 point (5).webp', points: 1 },
-        { key: 'goodObject_1_6', path: '../assets/dutch/fallingObjects/1 point (6).webp', points: 1 },
-        { key: 'goodObject_7_1', path: '../assets/dutch/fallingObjects/7 point (1).webp', points: 7 },
-        { key: 'goodObject_7_2', path: '../assets/dutch/fallingObjects/7 point (2).webp', points: 7 },
+        { key: 'goodObject_1', path: '../dutch/fallingObjects/1 point (1).webp' + cacheBuster, points: 10 },
+        { key: 'goodObject_2', path: '../dutch/fallingObjects/1 point (2).webp' + cacheBuster, points: 10 },
+        { key: 'goodObject_3', path: '../dutch/fallingObjects/1 point (3).webp' + cacheBuster, points: 10 },
+        { key: 'goodObject_4', path: '../dutch/fallingObjects/1 point (4).webp' + cacheBuster, points: 10 },
+        { key: 'goodObject_5', path: '../dutch/fallingObjects/1 point (5).webp' + cacheBuster, points: 10 },
+        { key: 'goodObject_6', path: '../dutch/fallingObjects/1 point (6).webp' + cacheBuster, points: 10 },
     ];
 
     this.goodObjects.forEach(obj => {
         this.load.image(obj.key, obj.path);
     });
 
-    this.load.image('vignette', '../assets/images/vignette.png');
-    this.load.spritesheet('explosion', '../assets/images/exp.png', { frameWidth: 300, frameHeight: 300 });
-    this.load.image('glow', '../assets/images/glow.png'); // Placeholder for liquid image
-    this.load.image('water-1', '../assets/images/water-1.png');
-    this.load.image('countdown', '../assets/images/countdown.png');
-    this.load.image('clock', '../assets/images/clock.png');
-    this.load.image('default', '../assets/images/whitetimer.png');
-    this.load.image('yellow', '../assets/images/10sec.png');
-    this.load.image('red', '../assets/images/redtimer.png');
-    this.load.image('scorebg', '../assets/images/scorebg-with-jar.png');
-    this.load.image('bowl', '../assets/dutch/bowl.webp');
-    this.load.image('overlayTop', '../assets/dutch/overlaytop.webp');
-    this.load.image('timerContainerBg', '../assets/dutch/timer.webp');
-    this.load.image('scoreContainerBg', '../assets/dutch/totalscore.webp');
-    this.load.image('milkSplash', '../assets/dutch/milk splash.png');
+    this.load.spritesheet('explosion', '../assets/images/exp.png' + cacheBuster, { frameWidth: 300, frameHeight: 300 });
+    this.load.image('countdown', '../assets/images/countdown.png' + cacheBuster);
+    this.load.image('clock', '../assets/images/clock.png' + cacheBuster);
+    this.load.image('bowl', '../dutch/bowl.webp' + cacheBuster);
+    this.load.image('overlayTop', '../dutch/overlaytop.webp' + cacheBuster);
+    this.load.image('timerContainerBg', '../dutch/timer.webp' + cacheBuster);
+    this.load.image('scoreContainerBg', '../dutch/totalscore.webp' + cacheBuster);
+    this.load.image('milkSplash', '../dutch/milk splash.png' + cacheBuster);
 }
 
 function create() {
@@ -99,14 +86,11 @@ function create() {
         hideOnComplete: true
     });
 
-    this.explosionSound = this.sound.add('explosionSound');
     this.collectSound = this.sound.add('collectSound');
     this.winSound = this.sound.add('win');
     this.countdownSound = this.sound.add('countDown');
-    this.wrongItemSound = this.sound.add('wrongitem');
     this.bgSound = this.sound.add('bg-sound', { loop: true });
     this.buzzerSound = this.sound.add('buzzer', { loop: false });
-    this.collect7Sound = this.sound.add('collect7Sound');
  
     this.countdownSound.play();
 
@@ -212,13 +196,6 @@ function create() {
         color: "#063591",
         fontStyle: 'bold'
     }).setOrigin(0.5).setDepth(1001);
-
-    // Add vignette overlay, initially invisible
-    this.vignette = this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'vignette')
-        .setOrigin(0.5)
-        .setDisplaySize(this.cameras.main.width, this.cameras.main.height)
-        .setAlpha(0)
-        .setDepth(1000);
 
     // Define updateCountdown as a scene method
     this.updateCountdown = function() {
@@ -393,11 +370,7 @@ function catchItem(bowlContainer, item) {
     if (points) {
         score += points;
         this.scoreText.setText(score);
-        if (points === 7) {
-            this.collect7Sound.play();
-        } else {
-            this.collectSound.play();
-        }
+        this.collectSound.play();
 
         // milk splash effect
         const splashX = item.x;
