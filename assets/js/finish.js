@@ -1,6 +1,7 @@
 // Finish page script
 let hoverTimer = null;
 let selectedLang = '';
+let isProcessing = false;
 
 window.onload = function () {
     const params = new URLSearchParams(window.location.search);
@@ -37,6 +38,9 @@ window.onload = function () {
     }
 
     function handleInteraction() {
+        if (isProcessing) return;
+        isProcessing = true;
+        
         startButton.classList.add('loading');
         const clickSound = new Audio('../assets/audio/select-sound.mp3');
         const completeSound = new Audio('../assets/audio/completed.mp3');
