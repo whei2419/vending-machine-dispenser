@@ -26,7 +26,7 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-var timer = 20;
+var timer = 600;
 var score = 0;
 
 var countdownText;
@@ -90,9 +90,9 @@ function create() {
  
     this.countdownSound.play();
 
-    this.background = this.add.image(0, 0, 'gamebg').setOrigin(0, 0);
-    this.background.displayWidth = this.cameras.main.width;
-    this.background.displayHeight = this.cameras.main.height;
+    this.background = this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'gamebg').setOrigin(0.5);
+    this.background.setDisplaySize(this.cameras.main.width, this.cameras.main.height);
+    this.background.setScale(Math.max(this.cameras.main.width / this.background.width, this.cameras.main.height / this.background.height));
 
     this.logo = this.add.image(30, 30, 'logo').setOrigin(0, 0);
     this.logo.setScale(0.3);
@@ -101,12 +101,12 @@ function create() {
 
     // Set up bowl and enable physics
     this.bowl = this.add.sprite(0, -40, 'bowl').setOrigin(0.5); // Adjust this Y value to move the bowl down
-    this.bowl.setScale(0.5);
+    this.bowl.setScale(0.4);
     const bowlWidth = this.bowl.displayWidth;
     const bowlHeight = this.bowl.displayHeight;
 
     // Create a container to hold the bowl
-    this.bowlContainer = this.add.container(this.cameras.main.centerX, this.cameras.main.height - 140, [this.bowl]);
+    this.bowlContainer = this.add.container(this.cameras.main.centerX, this.cameras.main.height - 200, [this.bowl]);
     this.bowlContainer.setSize(bowlWidth, bowlHeight);
     this.physics.world.enable(this.bowlContainer);
     this.bowlContainer.body.setCollideWorldBounds(true);
@@ -131,7 +131,7 @@ function create() {
     this.physics.add.existing(this.timerContainerBg, true);
 
     // Adjust the X and Y values below to position the timer text
-    this.timerText = this.add.text(this.cameras.main.width - 490, 117, '00:20', {
+    this.timerText = this.add.text(this.cameras.main.width - 490, 117, '10:00', {
         fontFamily: 'HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec', // Adjust font size here
         fontSize: '40px',
         color: "#FFFFFF",
@@ -299,9 +299,9 @@ function spawnItem() {
     this.spawnItemEvent = this.time.addEvent({
         delay: this.spawnDelay,
         callback: this.spawnItem,
-        callbackScope: this,
+        callbackScope: this,       
         loop: false
-    });
+    });    this.bowl.setScale(0.4);
 
     // Always spawn a good object
     var randomItem = Phaser.Math.RND.pick(this.goodObjects);
@@ -321,7 +321,7 @@ function spawnItem() {
         item.setData('points', randomItem.points);
     }
     item.setOrigin(0.5);
-    item.setScale(0.25);
+    item.setScale(0.1);
     item.body.setAllowGravity(true);
     item.body.gravity.y = this.dropGravity;
     item.body.velocity.x = Phaser.Math.Between(-30, 30);
