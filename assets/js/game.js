@@ -1,9 +1,8 @@
 //phazer game 
 // caching game 
 //rulle of the game  
-// object 1-3 end game over but before that  show a sprite animation of explotion and also shake the screen
-// 4-5  bad animation 
-// 6 good animation add scrore need 18 to win
+// all objects give 10 points each
+// 3 different falling objects available
 // 3 sec countdown before start the game
 
 var config = {
@@ -47,16 +46,13 @@ function preload() {
     this.load.audio('bg-sound', '../assets/audio/bg.mp3');
     this.load.audio('buzzer', '../assets/audio/long-buzzer.mp3');
 
-    this.load.image('gamebg', '../dutch/mainBackground.webp' + cacheBuster);  
+    this.load.image('gamebg', '../assets/dutch/mainBackground.webp' + cacheBuster);  
     
     // Load good objects from folder and parse points from filename
     this.goodObjects = [
-        { key: 'goodObject_1', path: '../dutch/fallingObjects/1 point (1).webp' + cacheBuster, points: 10 },
-        { key: 'goodObject_2', path: '../dutch/fallingObjects/1 point (2).webp' + cacheBuster, points: 10 },
-        { key: 'goodObject_3', path: '../dutch/fallingObjects/1 point (3).webp' + cacheBuster, points: 10 },
-        { key: 'goodObject_4', path: '../dutch/fallingObjects/1 point (4).webp' + cacheBuster, points: 10 },
-        { key: 'goodObject_5', path: '../dutch/fallingObjects/1 point (5).webp' + cacheBuster, points: 10 },
-        { key: 'goodObject_6', path: '../dutch/fallingObjects/1 point (6).webp' + cacheBuster, points: 10 },
+        { key: 'goodObject_1', path: '../assets/dutch/fallingObjects/DL Point (1)_1x.webp' + cacheBuster, points: 10 },
+        { key: 'goodObject_2', path: '../assets/dutch/fallingObjects/DL Point (2)_1x.webp' + cacheBuster, points: 10 },
+        { key: 'goodObject_3', path: '../assets/dutch/fallingObjects/DL Point (3)_1x.webp' + cacheBuster, points: 10 },
     ];
 
     this.goodObjects.forEach(obj => {
@@ -66,11 +62,11 @@ function preload() {
     this.load.spritesheet('explosion', '../assets/images/exp.png' + cacheBuster, { frameWidth: 300, frameHeight: 300 });
     this.load.image('countdown', '../assets/images/countdown.png' + cacheBuster);
     this.load.image('clock', '../assets/images/clock.png' + cacheBuster);
-    this.load.image('bowl', '../dutch/bowl.webp' + cacheBuster);
-    this.load.image('overlayTop', '../dutch/overlaytop.webp' + cacheBuster);
-    this.load.image('timerContainerBg', '../dutch/timer.webp' + cacheBuster);
-    this.load.image('scoreContainerBg', '../dutch/totalscore.webp' + cacheBuster);
-    this.load.image('milkSplash', '../dutch/milk splash.png' + cacheBuster);
+    this.load.image('bowl', '../assets/dutch/bowl.webp' + cacheBuster);
+    this.load.image('logo', '../assets/dutch/logo.webp' + cacheBuster);
+    this.load.image('timerContainerBg', '../assets/dutch/timer.webp' + cacheBuster);
+    this.load.image('scoreContainerBg', '../assets/dutch/totalscore.webp' + cacheBuster);
+    this.load.image('milkSplash', '../assets/dutch/milk splash.png' + cacheBuster);
 }
 
 function create() {
@@ -98,11 +94,9 @@ function create() {
     this.background.displayWidth = this.cameras.main.width;
     this.background.displayHeight = this.cameras.main.height;
 
-    this.overlayTop = this.add.image(0, 0, 'overlayTop').setOrigin(0, 0);
-    this.overlayTop.setScrollFactor(0);
-    this.overlayTop.scaleX = this.cameras.main.width / this.overlayTop.width;
-    this.overlayTop.scaleY = this.overlayTop.scaleX;
-    this.overlayTop.setDepth(98);
+    this.logo = this.add.image(30, 30, 'logo').setOrigin(0, 0);
+    this.logo.setScale(0.3);
+    this.logo.setDepth(98);
 
 
     // Set up bowl and enable physics
@@ -327,7 +321,7 @@ function spawnItem() {
         item.setData('points', randomItem.points);
     }
     item.setOrigin(0.5);
-    item.setScale(0.4);
+    item.setScale(0.25);
     item.body.setAllowGravity(true);
     item.body.gravity.y = this.dropGravity;
     item.body.velocity.x = Phaser.Math.Between(-30, 30);
