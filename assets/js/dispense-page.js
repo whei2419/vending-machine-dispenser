@@ -89,21 +89,20 @@ function startCheckingForCompletion(timestamp) {
     checkInterval = setInterval(async () => {
         try {
             const response = await fetch('../dispenser/check_log.php?t=' + Date.now());
-            const data = await response.json();
+            const data = await response.text();
             
-            if (data.status === 'success' && data.last_entry) {
-                if (data.last_entry === expectedCompletion) {
-                    clearInterval(checkInterval);
-                    clearInterval(progressInterval);
-                    progressBar.style.width = '100%';
-                    statusDiv.textContent = 'Dispense completed successfully!';
-                    statusDiv.style.color = 'green';
-                    
-                    // Redirect to index page after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = '../index.html';
-                    }, 2000);
-                }
+            // Check if the log contains the expected completion entry
+            if (data && data.includes(expectedCompletion)) {
+                clearInterval(checkInterval);
+                clearInterval(progressInterval);
+                progressBar.style.width = '100%';
+                statusDiv.textContent = 'Dispense completed successfully!';
+                statusDiv.style.color = 'green';
+                
+                // Redirect to index page after 2 seconds
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 2000);
             }
         } catch (error) {
             console.error('Error checking log:', error);
