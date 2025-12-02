@@ -20,6 +20,7 @@ window.onload = function () {
     }
 
     startButton.addEventListener('mouseover', function () {
+        startButton.classList.add('loading');
         const clickSound = new Audio('../assets/audio/select-sound.mp3');
         const completeSound = new Audio('../assets/audio/completed.mp3');
         clickSound.play();
@@ -32,6 +33,7 @@ window.onload = function () {
     });
 
     startButton.addEventListener('mouseout', function () {
+        startButton.classList.remove('loading');
         clearTimeout(hoverTimer);
     });
 }
