@@ -95,7 +95,7 @@ function create() {
     this.background.setScale(Math.max(this.cameras.main.width / this.background.width, this.cameras.main.height / this.background.height));
 
     this.logo = this.add.image(30, 30, 'logo').setOrigin(0, 0);
-    this.logo.setScale(0.3);
+    this.logo.setScale(0.28);
     this.logo.setDepth(98);
 
 
@@ -131,7 +131,7 @@ function create() {
     this.physics.add.existing(this.timerContainerBg, true);
 
     // Adjust the X and Y values below to position the timer text
-    this.timerText = this.add.text(this.cameras.main.width - 490, 117, '10:00', {
+    this.timerText = this.add.text(this.cameras.main.width - 480, 117, '10:00', {
         fontFamily: 'HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec', // Adjust font size here
         fontSize: '40px',
         color: "#FFFFFF",
@@ -145,7 +145,7 @@ function create() {
     this.physics.add.existing(this.scoreContainerBg, true);
 
     // Adjust the X and Y values below to position the score text
-    this.scoreText = this.add.text(this.cameras.main.width - 175, 117, '0', {
+    this.scoreText = this.add.text(this.cameras.main.width - 165, 117, '0', {
         fontFamily: 'HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec', // Adjust font size here
         fontSize: '40px',
         color: "#FFFFFF",
