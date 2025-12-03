@@ -189,12 +189,12 @@ function create() {
         .setOrigin(0.5)
         .setDepth(1002)
         .setAlpha(0)
-        .setScale(0.5);
+        .setScale(0.2);
     
     this.tweens.add({
         targets: this.countdownReadyImage,
         alpha: 1,
-        scale: 0.6,
+        scale: 0.3,
         duration: 500,
         ease: 'Back.Out'
     });
