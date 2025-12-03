@@ -74,7 +74,7 @@ function startCheckingForCompletion(timestamp) {
                 clearInterval(checkInterval);
                 clearInterval(progressInterval);
                 
-                statusDiv.textContent = 'Dispensing in progress...';
+                statusDiv.textContent = 'Your reward is falling! Please collect it...';
                 statusDiv.style.color = '#ffffff';
                 
                 // Animate progress bar over 30 seconds
@@ -83,16 +83,16 @@ function startCheckingForCompletion(timestamp) {
                 
                 const dispenseProgressInterval = setInterval(() => {
                     if (dispenseProgress < 100) {
-                        dispenseProgress += 0.33; // Reach 100% in ~30 steps
+                        dispenseProgress += 2; // Reach 100% in ~5 steps
                         progressBar.style.width = dispenseProgress + '%';
                     }
                 }, 1000);
                 
-                // Wait 30 seconds for dispensing to complete
+                // Wait 5 seconds for dispensing to complete
                 setTimeout(async () => {
                     clearInterval(dispenseProgressInterval);
                     progressBar.style.width = '100%';
-                    statusDiv.textContent = 'Dispense completed successfully!';
+                    statusDiv.textContent = 'Collection complete! Thank you!';
                     statusDiv.style.color = '#ffffff';
                     
                     // Clear the ActionLog.txt file
@@ -111,13 +111,13 @@ function startCheckingForCompletion(timestamp) {
                     setTimeout(() => {
                         window.location.href = '../index.html';
                     }, 2000);
-                }, 30000); // 30 seconds
+                }, 5000); // 5 seconds
             }
         } catch (error) {
             console.error('Error checking log:', error);
             await logErrorToServer('startCheckingForCompletion', error.message);
         }
-    }, 5000); // Check every 5 seconds
+    }, 500); // Check every 500ms
     
     // Timeout after 2 minutes (if S entry never appears)
     setTimeout(() => {
