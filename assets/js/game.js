@@ -69,6 +69,7 @@ function preload() {
 
     this.load.spritesheet('explosion', '../assets/images/exp.png' + cacheBuster, { frameWidth: 300, frameHeight: 300 });
     this.load.image('countdown', '../assets/images/countdown.webp' + cacheBuster);
+    this.load.image('countdownReady', '../assets/dutch/countdown_reaady.webp' + cacheBuster);
     this.load.image('clock', '../assets/images/clock.png' + cacheBuster);
     this.load.image('bowl', '../assets/dutch/bowl.webp' + cacheBuster);
     this.load.image('logo', '../assets/dutch/logo.webp' + cacheBuster);
@@ -178,6 +179,26 @@ function create() {
         duration: 500,
         ease: 'Quad.easeIn'
     });
+    
+    // Add "Ready" image above countdown container
+    this.countdownReadyImage = this.add.image(
+        this.cameras.main.centerX, 
+        this.cameras.main.centerY - 440, 
+        'countdownReady'
+    )
+        .setOrigin(0.5)
+        .setDepth(1002)
+        .setAlpha(0)
+        .setScale(0.5);
+    
+    this.tweens.add({
+        targets: this.countdownReadyImage,
+        alpha: 1,
+        scale: 0.6,
+        duration: 500,
+        ease: 'Back.Out'
+    });
+    
     // Add background image for countdown timer with scale pop-in animation
     this.countdownBg = this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'countdown')
         .setOrigin(0.5)
@@ -208,12 +229,13 @@ function create() {
             this.countdownText.setText('');
             // Animate overlay and background out
             this.tweens.add({
-                targets: [this.countdownOverlay, this.countdownBg],
+                targets: [this.countdownOverlay, this.countdownBg, this.countdownReadyImage],
                 alpha: 0,
                 duration: 100,
                 onComplete: () => {
                     this.countdownOverlay.setVisible(false);
                     this.countdownBg.setVisible(false);
+                    this.countdownReadyImage.setVisible(false);
                 }
             });
             this.countdownEvent.remove();
