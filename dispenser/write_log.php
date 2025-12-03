@@ -19,8 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $_POST['action'];
         $logFile = __DIR__ . '/ActionLog.txt';
         
-        // Append to the log file with newline
-        $result = file_put_contents($logFile, $action . "\n", FILE_APPEND | LOCK_EX);
+        // Append to the log file without newline
+        $result = file_put_contents($logFile, $action, FILE_APPEND | LOCK_EX);
         
         if ($result !== false) {
             echo "Success: Log entry written";
