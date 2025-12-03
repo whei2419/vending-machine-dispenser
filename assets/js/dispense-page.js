@@ -90,12 +90,13 @@ async function triggerDispense() {
 function startCheckingForCompletion(timestamp) {
     const statusDiv = document.getElementById('status');
     const progressBar = document.getElementById('progressBar');
-    const expectedCompletion = `S;${timestamp}`;
+    const expectedStart = `S;${timestamp}`;
     let progress = 50;
+    let dispensingStarted = false;
     
     // Gradually increase progress while waiting
     const progressInterval = setInterval(() => {
-        if (progress < 90) {
+        if (!dispensingStarted && progress < 90) {
             progress += 2;
             progressBar.style.width = progress + '%';
         }
@@ -106,34 +107,54 @@ function startCheckingForCompletion(timestamp) {
             const response = await fetch('../dispenser/check_log.php?t=' + Date.now());
             const data = await response.text();
             
-            // Check if the log contains the expected completion entry
-            if (data && data.includes(expectedCompletion)) {
+            // Check if dispensing has started (S entry detected)
+            if (!dispensingStarted && data && data.includes(expectedStart)) {
+                dispensingStarted = true;
                 clearInterval(checkInterval);
                 clearInterval(progressInterval);
-                progressBar.style.width = '100%';
-                statusDiv.textContent = 'Dispense completed successfully!';
+                
+                statusDiv.textContent = 'Dispensing in progress...';
                 statusDiv.style.color = '#ffffff';
                 
-                // Clear the ActionLog.txt file before redirecting
-                try {
-                    const clearResponse = await fetch('../dispenser/clear_log.php', {
-                        method: 'POST'
-                    });
-                    const clearResult = await clearResponse.text();
-                    console.log('Log cleared:', clearResult);
-                } catch (error) {
-                    console.error('Failed to clear log:', error);
-                    await logErrorToServer('clearLog', error.message);
-                }
+                // Animate progress bar over 30 seconds
+                let dispenseProgress = 90;
+                progressBar.style.width = '90%';
                 
-                // Clear the dispense flags
-                sessionStorage.removeItem('dispenseTriggered');
-                sessionStorage.removeItem('dispenseTimestamp');
+                const dispenseProgressInterval = setInterval(() => {
+                    if (dispenseProgress < 100) {
+                        dispenseProgress += 0.33; // Reach 100% in ~30 steps
+                        progressBar.style.width = dispenseProgress + '%';
+                    }
+                }, 1000);
                 
-                // Redirect to index page after 2 seconds
-                setTimeout(() => {
-                    window.location.href = '../index.html';
-                }, 2000);
+                // Wait 30 seconds for dispensing to complete
+                setTimeout(async () => {
+                    clearInterval(dispenseProgressInterval);
+                    progressBar.style.width = '100%';
+                    statusDiv.textContent = 'Dispense completed successfully!';
+                    statusDiv.style.color = '#ffffff';
+                    
+                    // Clear the ActionLog.txt file
+                    try {
+                        const clearResponse = await fetch('../dispenser/clear_log.php', {
+                            method: 'POST'
+                        });
+                        const clearResult = await clearResponse.text();
+                        console.log('Log cleared:', clearResult);
+                    } catch (error) {
+                        console.error('Failed to clear log:', error);
+                        await logErrorToServer('clearLog', error.message);
+                    }
+                    
+                    // Clear the dispense flags
+                    sessionStorage.removeItem('dispenseTriggered');
+                    sessionStorage.removeItem('dispenseTimestamp');
+                    
+                    // Redirect to index page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '../index.html';
+                    }, 2000);
+                }, 30000); // 30 seconds
             }
         } catch (error) {
             console.error('Error checking log:', error);
@@ -141,9 +162,9 @@ function startCheckingForCompletion(timestamp) {
         }
     }, 5000); // Check every 5 seconds
     
-    // Timeout after 2 minutes
+    // Timeout after 2 minutes (if S entry never appears)
     setTimeout(() => {
-        if (checkInterval) {
+        if (checkInterval && !dispensingStarted) {
             clearInterval(checkInterval);
             clearInterval(progressInterval);
             progressBar.style.width = '100%';
