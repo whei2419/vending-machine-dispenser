@@ -114,6 +114,18 @@ function startCheckingForCompletion(timestamp) {
                 statusDiv.textContent = 'Dispense completed successfully!';
                 statusDiv.style.color = '#ffffff';
                 
+                // Clear the ActionLog.txt file before redirecting
+                try {
+                    const clearResponse = await fetch('../dispenser/clear_log.php', {
+                        method: 'POST'
+                    });
+                    const clearResult = await clearResponse.text();
+                    console.log('Log cleared:', clearResult);
+                } catch (error) {
+                    console.error('Failed to clear log:', error);
+                    await logErrorToServer('clearLog', error.message);
+                }
+                
                 // Clear the dispense flags
                 sessionStorage.removeItem('dispenseTriggered');
                 sessionStorage.removeItem('dispenseTimestamp');
