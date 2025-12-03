@@ -44,18 +44,59 @@ window.onload = function () {
         const clickSound = new Audio('../assets/audio/select-sound.mp3');
         const completeSound = new Audio('../assets/audio/completed.mp3');
         clickSound.play();
-        hoverTimer = setTimeout(function () {
+        hoverTimer = setTimeout(async function () {
             isProcessing = true;
             completeSound.play();
-            setTimeout(function () {
-                // Only redirect if score is valid (player actually played the game)
-                if (score && parseInt(score) >= 0) {
-                    window.location.href = `dispense.html?lang=${selectedLang}`;
-                } else {
-                    // Skip dispense if no valid score
-                    window.location.href = `../index.html?lang=${selectedLang}`;
+            
+            // Only proceed to dispense if score is valid (player actually played the game)
+            if (score && parseInt(score) >= 0) {
+                // Send D entry to ActionLog before redirecting to dispense page
+                try {
+                    // Generate timestamp
+                    const now = new Date();
+                    const timestamp = now.getFullYear() +
+                        String(now.getMonth() + 1).padStart(2, '0') +
+                        String(now.getDate()).padStart(2, '0') +
+                        String(now.getHours()).padStart(2, '0') +
+                        String(now.getMinutes()).padStart(2, '0') +
+                        String(now.getSeconds()).padStart(2, '0');
+                    
+                    const message = `D;${timestamp}`;
+                    console.log('Sending D entry:', message);
+                    
+                    // Send D entry
+                    const response = await fetch('../dispenser/write_log.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'action=' + encodeURIComponent(message)
+                    });
+                    
+                    const result = await response.text();
+                    console.log('Write log response:', result);
+                    
+                    if (result.includes('Success')) {
+                        console.log('D entry written successfully, redirecting to dispense page');
+                        
+                        setTimeout(function () {
+                            window.location.href = `dispense.html?lang=${selectedLang}&timestamp=${timestamp}`;
+                        }, 500);
+                    } else {
+                        throw new Error('Failed to write D entry: ' + result);
+                    }
+                } catch (error) {
+                    console.error('Error sending D entry:', error);
+                    setTimeout(function () {
+                        window.location.href = `../index.html?lang=${selectedLang}`;
+                    }, 500);
                 }
-            }, 500);
+            } else {
+                // Skip dispense if no valid score
+                setTimeout(function () {
+                    window.location.href = `../index.html?lang=${selectedLang}`;
+                }, 500);
+            }
         }, 1000);
     }
 
