@@ -2,6 +2,18 @@
 let selectedLang = '';
 let hoverTimer = null;
 
+async function clearActionLog() {
+    try {
+        const response = await fetch('dispenser/clear_log.php', {
+            method: 'POST'
+        });
+        const result = await response.text();
+        console.log('ActionLog cleared on start page:', result);
+    } catch (error) {
+        console.error('Failed to clear ActionLog:', error);
+    }
+}
+
 window.onload = function () {
     const params = new URLSearchParams(window.location.search);
     const lang = params.get('lang');
@@ -10,6 +22,9 @@ window.onload = function () {
     const startButton = document.getElementById('startButton');
     const startVideo = document.getElementById('startVideo');
     const videoContainer = document.querySelector('.video');
+
+    // Clear ActionLog when page loads
+    clearActionLog();
 
     if (lang === 'chinese') {
         body.style.backgroundImage = "url('assets/startcn.png')";
