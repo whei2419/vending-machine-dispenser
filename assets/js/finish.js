@@ -39,13 +39,13 @@ window.onload = function () {
 
     function handleInteraction() {
         if (isProcessing) return;
+        isProcessing = true;
         
         startButton.classList.add('loading');
         const clickSound = new Audio('../assets/audio/select-sound.mp3');
         const completeSound = new Audio('../assets/audio/completed.mp3');
         clickSound.play();
         hoverTimer = setTimeout(async function () {
-            isProcessing = true;
             completeSound.play();
             
             // Only proceed to dispense if score is valid (player actually played the game)
@@ -107,6 +107,7 @@ window.onload = function () {
         if (!isProcessing) {
             startButton.classList.remove('loading');
             clearTimeout(hoverTimer);
+            isProcessing = false;
         }
     });
 }
