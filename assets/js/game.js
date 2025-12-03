@@ -351,7 +351,7 @@ function spawnItem() {
         item.setData('points', randomItem.points);
     }
     item.setOrigin(0.5);
-    item.setScale(0.1);
+    item.setScale(0.14);
     item.body.setAllowGravity(true);
     item.body.gravity.y = this.dropGravity;
     item.body.velocity.x = Phaser.Math.Between(-30, 30);
