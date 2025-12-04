@@ -376,9 +376,13 @@ function updateTimer() {
         this.winSound.play();
 
 
-        // Redirect to finish page after a delay
+        // Redirect to finish or try again page based on score
         this.time.delayedCall(2000, () => {
-            window.location.href = `finish.html?score=${score}&obj1=${object1Score}&obj2=${object2Score}&obj3=${object3Score}&lang=${lang}`;
+            if (score >= 400) {
+                window.location.href = `finish.html?score=${score}&obj1=${object1Score}&obj2=${object2Score}&obj3=${object3Score}&lang=${lang}`;
+            } else {
+                window.location.href = `tryagain.html?score=${score}&obj1=${object1Score}&obj2=${object2Score}&obj3=${object3Score}&lang=${lang}`;
+            }
         });
     }
 }

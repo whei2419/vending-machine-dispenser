@@ -1,4 +1,4 @@
-/* Finish page styles */
+/* Try Again page styles */
 body {
   margin: 0;
   padding: 0;
@@ -8,13 +8,13 @@ body {
   position: relative;
 }
 
-.start-button {
+.tryagain-button {
   background-color: #f37021;
   color: white;
   border: 10px solid #f37021;
   font-size: 48px;
   cursor: pointer;
-  width: 350px;
+  width: 420px;
   height: 110px;
   border-radius: 70px;
   position: relative;
@@ -23,13 +23,13 @@ body {
   justify-content: center;
 }
 
-.start-button.loading::after {
+.tryagain-button.loading::after {
   content: "";
   position: absolute;
   width: 20px;
   height: 20px;
-  right: 20px;
-  top: 20px;
+  right: 25px;
+  top: 25px;
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   border-top-color: white;
@@ -90,7 +90,7 @@ body {
 }
 
 .individual-scores span:nth-child(1) {
-  left: 16%;
+left: 16%;
 }
 
 .individual-scores span:nth-child(2) {
