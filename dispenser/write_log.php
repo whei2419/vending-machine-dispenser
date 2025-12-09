@@ -19,8 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $action = $_POST['action'];
         $logFile = __DIR__ . '/ActionLog.txt';
         
-        // Append to the log file without newline
-        $result = file_put_contents($logFile, $action, FILE_APPEND | LOCK_EX);
+        // Overwrite the log file with the new action (replace previous entry)
+        $result = file_put_contents($logFile, $action, LOCK_EX);
         
         if ($result !== false) {
             echo "Success: Log entry written";
