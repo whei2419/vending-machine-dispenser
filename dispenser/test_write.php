@@ -9,7 +9,7 @@ echo "File writable: " . (is_writable($logFile) ? 'Yes' : 'No') . "\n\n";
 
 // Try to write test data
 $testData = "TEST;20251202120000\n";
-$result = file_put_contents($logFile, $testData, FILE_APPEND | LOCK_EX);
+$result = file_put_contents($logFile, $testData, LOCK_EX);
 
 if ($result !== false) {
     echo "SUCCESS: Wrote " . $result . " bytes\n";

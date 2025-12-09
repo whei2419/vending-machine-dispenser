@@ -23,8 +23,8 @@ window.onload = function () {
     const startVideo = document.getElementById('startVideo');
     const videoContainer = document.querySelector('.video');
 
-    // Clear ActionLog when page loads
-    clearActionLog();
+    // Note: Do not clear ActionLog on start to avoid removing dispenser timestamps
+    // clearActionLog(); // intentionally disabled
 
     if (lang === 'chinese') {
         body.style.backgroundImage = "url('assets/startcn.png')";

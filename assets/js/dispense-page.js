@@ -40,29 +40,17 @@ async function triggerDispense() {
         }
     }, 100);
     
-    // After 10 seconds, clear log and redirect
-    setTimeout(async () => {
+    // After 10 seconds, finish progress and redirect to index
+    setTimeout(() => {
         clearInterval(progressInterval);
         progressBar.style.width = '100%';
         statusDiv.textContent = 'Collection complete! Thank you!';
         statusDiv.style.color = '#ffffff';
         
-        // Clear the ActionLog.txt file
-        try {
-            const clearResponse = await fetch('../dispenser/clear_log.php', {
-                method: 'POST'
-            });
-            const clearResult = await clearResponse.text();
-            console.log('Log cleared:', clearResult);
-        } catch (error) {
-            console.error('Failed to clear log:', error);
-            await logErrorToServer('clearLog', error.message);
-        }
-        
-        // Redirect to index page after 1 second
+        // Redirect to index page after 2 seconds
         setTimeout(() => {
             window.location.href = '../index.html';
-        }, 1000);
+        }, 2000);
     }, 10000); // 10 seconds
 }
 
