@@ -1,9 +1,34 @@
 //phazer game 
 // caching game 
 //rulle of the game  
-// all objects give 10 points each
-// 3 different falling objects available
+// all objects give configurable points each
+// Multiple different falling objects available
 // 3 sec countdown before start the game
+
+// Load game configuration from localStorage
+function getConfig() {
+    const savedConfig = localStorage.getItem('gameConfig');
+    if (savedConfig) {
+        return JSON.parse(savedConfig);
+    }
+    // Default configuration
+    return {
+        appleScore: 1,
+        bananaScore: 1,
+        carrotScore: 1,
+        eggScore: 1,
+        milkScore: 3,
+        negativeScore: -1,
+        winScore: 20,
+        gameTimer: 30,
+        initialSpawnDelay: 1200,
+        minSpawnDelay: 600,
+        initialGravity: 300,
+        maxGravity: 900
+    };
+}
+
+const gameConfig = getConfig();
 
 var config = {
     type: Phaser.AUTO,
@@ -31,7 +56,7 @@ var config = {
 
 var game = new Phaser.Game(config);
 
-var timer = 30;
+var timer = gameConfig.gameTimer;
 var score = 0;
 // Individual scores for normal objects and special object
 var appleScore = 0;
@@ -60,27 +85,22 @@ function preload() {
 
     this.load.image('gamebg', '../assets/dutch/mainBackground.webp' + cacheBuster);  
     
-    // Configurable scores for each object type
-    const NORMAL_SCORE = 1;
-    const NEGATIVE_SCORE = -1;
-    const SPECIAL_SCORE = 3;
-    
-    // Load falling objects with their types and scores
+    // Load falling objects with their types and scores from config
     this.fallingObjects = [
-        // Normal objects (+1 point each)
-        { key: 'apple', path: '../assets/dutch/fallingObjects/normal/apple.webp' + cacheBuster, type: 'normal', points: NORMAL_SCORE },
-        { key: 'banana', path: '../assets/dutch/fallingObjects/normal/banana.webp' + cacheBuster, type: 'normal', points: NORMAL_SCORE },
-        { key: 'carrot', path: '../assets/dutch/fallingObjects/normal/carrot.webp' + cacheBuster, type: 'normal', points: NORMAL_SCORE },
-        { key: 'egg', path: '../assets/dutch/fallingObjects/normal/egg.webp' + cacheBuster, type: 'normal', points: NORMAL_SCORE },
+        // Normal objects (configurable points each)
+        { key: 'apple', path: '../assets/dutch/fallingObjects/normal/apple.webp' + cacheBuster, type: 'normal', points: gameConfig.appleScore },
+        { key: 'banana', path: '../assets/dutch/fallingObjects/normal/banana.webp' + cacheBuster, type: 'normal', points: gameConfig.bananaScore },
+        { key: 'carrot', path: '../assets/dutch/fallingObjects/normal/carrot.webp' + cacheBuster, type: 'normal', points: gameConfig.carrotScore },
+        { key: 'egg', path: '../assets/dutch/fallingObjects/normal/egg.webp' + cacheBuster, type: 'normal', points: gameConfig.eggScore },
         
-        // Negative objects (-1 point each)
-        { key: 'negative_1', path: '../assets/dutch/fallingObjects/negative/(3B) 1 Minus One Point.webp' + cacheBuster, type: 'negative', points: NEGATIVE_SCORE },
-        { key: 'negative_2', path: '../assets/dutch/fallingObjects/negative/(3B) 2 Minus One Point.webp' + cacheBuster, type: 'negative', points: NEGATIVE_SCORE },
-        { key: 'negative_3', path: '../assets/dutch/fallingObjects/negative/(3B) 3 Minus One Point.webp' + cacheBuster, type: 'negative', points: NEGATIVE_SCORE },
-        { key: 'negative_4', path: '../assets/dutch/fallingObjects/negative/(3B) 4 Minus One Point.webp' + cacheBuster, type: 'negative', points: NEGATIVE_SCORE },
+        // Negative objects (configurable points each)
+        { key: 'negative_1', path: '../assets/dutch/fallingObjects/negative/(3B) 1 Minus One Point.webp' + cacheBuster, type: 'negative', points: gameConfig.negativeScore },
+        { key: 'negative_2', path: '../assets/dutch/fallingObjects/negative/(3B) 2 Minus One Point.webp' + cacheBuster, type: 'negative', points: gameConfig.negativeScore },
+        { key: 'negative_3', path: '../assets/dutch/fallingObjects/negative/(3B) 3 Minus One Point.webp' + cacheBuster, type: 'negative', points: gameConfig.negativeScore },
+        { key: 'negative_4', path: '../assets/dutch/fallingObjects/negative/(3B) 4 Minus One Point.webp' + cacheBuster, type: 'negative', points: gameConfig.negativeScore },
         
-        // Special objects (+3 points each)
-        { key: 'milk', path: '../assets/dutch/fallingObjects/special/milk.webp' + cacheBuster, type: 'special', points: SPECIAL_SCORE },
+        // Special objects (configurable points each)
+        { key: 'milk', path: '../assets/dutch/fallingObjects/special/milk.webp' + cacheBuster, type: 'special', points: gameConfig.milkScore },
     ];
 
     this.fallingObjects.forEach(obj => {
@@ -143,12 +163,12 @@ function create() {
     this.bowlContainer.body.setSize(bowlWidth * 0.8, bowlHeight * 0.4);
     this.bowlContainer.body.setOffset(bowlWidth * 0.1, 40);
  
-    this.spawnDelay = 1200; // Initial spawn delay (ms)
-    this.dropGravity = 300; // Initial gravity for falling items
+    this.spawnDelay = gameConfig.initialSpawnDelay; // Initial spawn delay from config
+    this.dropGravity = gameConfig.initialGravity; // Initial gravity from config
     this.spawnAcceleration = 0.98; // How much to multiply spawnDelay each interval (slower acceleration)
     this.gravityAcceleration = 1.03; // How much to multiply dropGravity each interval (slower acceleration)
-    this.minSpawnDelay = 600; // Minimum spawn delay (slower minimum)
-    this.maxDropGravity = 900; // Maximum gravity (slower max)
+    this.minSpawnDelay = gameConfig.minSpawnDelay; // Minimum spawn delay from config
+    this.maxDropGravity = gameConfig.maxGravity; // Maximum gravity from config
     this.isGameOver = false; // Track game over state
 
     // Create a physics group for falling items
@@ -400,7 +420,7 @@ function updateTimer() {
 
         // Redirect to finish or try again page based on score
         this.time.delayedCall(2000, () => {
-            if (score >= 20) {
+            if (score >= gameConfig.winScore) {
                 window.location.href = `finish.html?score=${score}&apple=${appleScore}&banana=${bananaScore}&carrot=${carrotScore}&egg=${eggScore}&milk=${milkScore}&lang=${lang}`;
             } else {
                 window.location.href = `tryagain.html?score=${score}&apple=${appleScore}&banana=${bananaScore}&carrot=${carrotScore}&egg=${eggScore}&milk=${milkScore}&lang=${lang}`;
