@@ -33,9 +33,12 @@ var game = new Phaser.Game(config);
 
 var timer = 30;
 var score = 0;
-var object1Score = 0;
-var object2Score = 0;
-var object3Score = 0;
+// Individual scores for normal objects and special object
+var appleScore = 0;
+var bananaScore = 0;
+var carrotScore = 0;
+var eggScore = 0;
+var milkScore = 0;
 
 var countdownText;
 var timerText;
@@ -56,14 +59,30 @@ function preload() {
 
     this.load.image('gamebg', '../assets/dutch/mainBackground.webp' + cacheBuster);  
     
-    // Load good objects from folder and parse points from filename
-    this.goodObjects = [
-        { key: 'goodObject_1', path: '../assets/dutch/fallingObjects/DL Point (1)_1x.webp' + cacheBuster, points: 10 },
-        { key: 'goodObject_2', path: '../assets/dutch/fallingObjects/DL Point (2)_1x.webp' + cacheBuster, points: 10 },
-        { key: 'goodObject_3', path: '../assets/dutch/fallingObjects/DL Point (3)_1x.webp' + cacheBuster, points: 10 },
+    // Configurable scores for each object type
+    const NORMAL_SCORE = 1;
+    const NEGATIVE_SCORE = -1;
+    const SPECIAL_SCORE = 3;
+    
+    // Load falling objects with their types and scores
+    this.fallingObjects = [
+        // Normal objects (+1 point each)
+        { key: 'apple', path: '../assets/dutch/fallingObjects/normal/apple.webp' + cacheBuster, type: 'normal', points: NORMAL_SCORE },
+        { key: 'banana', path: '../assets/dutch/fallingObjects/normal/banana.webp' + cacheBuster, type: 'normal', points: NORMAL_SCORE },
+        { key: 'carrot', path: '../assets/dutch/fallingObjects/normal/carrot.webp' + cacheBuster, type: 'normal', points: NORMAL_SCORE },
+        { key: 'egg', path: '../assets/dutch/fallingObjects/normal/egg.webp' + cacheBuster, type: 'normal', points: NORMAL_SCORE },
+        
+        // Negative objects (-1 point each)
+        { key: 'negative_1', path: '../assets/dutch/fallingObjects/negative/(3B) 1 Minus One Point.webp' + cacheBuster, type: 'negative', points: NEGATIVE_SCORE },
+        { key: 'negative_2', path: '../assets/dutch/fallingObjects/negative/(3B) 2 Minus One Point.webp' + cacheBuster, type: 'negative', points: NEGATIVE_SCORE },
+        { key: 'negative_3', path: '../assets/dutch/fallingObjects/negative/(3B) 3 Minus One Point.webp' + cacheBuster, type: 'negative', points: NEGATIVE_SCORE },
+        { key: 'negative_4', path: '../assets/dutch/fallingObjects/negative/(3B) 4 Minus One Point.webp' + cacheBuster, type: 'negative', points: NEGATIVE_SCORE },
+        
+        // Special objects (+3 points each)
+        { key: 'milk', path: '../assets/dutch/fallingObjects/special/milk.webp' + cacheBuster, type: 'special', points: SPECIAL_SCORE },
     ];
 
-    this.goodObjects.forEach(obj => {
+    this.fallingObjects.forEach(obj => {
         this.load.image(obj.key, obj.path);
     });
 
@@ -183,18 +202,18 @@ function create() {
     // Add "Ready" image above countdown container
     this.countdownReadyImage = this.add.image(
         this.cameras.main.centerX, 
-        this.cameras.main.centerY - 440, 
+        this.cameras.main.centerY - 400, 
         'countdownReady'
     )
         .setOrigin(0.5)
         .setDepth(1002)
         .setAlpha(0)
-        .setScale(0.2);
+        .setScale(0.5);
     
     this.tweens.add({
         targets: this.countdownReadyImage,
         alpha: 1,
-        scale: 0.3,
+        scale: 0.5,
         duration: 500,
         ease: 'Back.Out'
     });
@@ -215,7 +234,7 @@ function create() {
     // Countdown text styled and above background
     this.countdownText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, '3', {
         fontFamily: 'HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec',
-        fontSize: '200px',
+        fontSize: '250px',
         color: "#F37021",
         fontStyle: 'bold'
     }).setOrigin(0.5).setDepth(1001);
@@ -333,9 +352,8 @@ function spawnItem() {
         loop: false
     });    this.bowl.setScale(0.4);
 
-    // Always spawn a good object
-    var randomItem = Phaser.Math.RND.pick(this.goodObjects);
-    randomItem.isGood = true;
+    // Spawn a random object from all types (normal, negative, special)
+    var randomItem = Phaser.Math.RND.pick(this.fallingObjects);
 
     // Calculate item width for safe spawn
     const texture = this.textures.get(randomItem.key);
@@ -346,10 +364,11 @@ function spawnItem() {
     var x = Phaser.Math.Between(minX, maxX);
     var y = -100;
     var item = this.items.create(x, y, randomItem.key);
-    item.isGood = randomItem.isGood;
-    if (randomItem.isGood) {
-        item.setData('points', randomItem.points);
-    }
+    
+    // Set item data including type and points
+    item.setData('points', randomItem.points);
+    item.setData('type', randomItem.type);
+    
     item.setOrigin(0.5);
     item.setScale(0.14);
     item.body.setAllowGravity(true);
@@ -378,10 +397,10 @@ function updateTimer() {
 
         // Redirect to finish or try again page based on score
         this.time.delayedCall(2000, () => {
-            if (score >= 400) {
-                window.location.href = `finish.html?score=${score}&obj1=${object1Score}&obj2=${object2Score}&obj3=${object3Score}&lang=${lang}`;
+            if (score >= 20) {
+                window.location.href = `finish.html?score=${score}&apple=${appleScore}&banana=${bananaScore}&carrot=${carrotScore}&egg=${eggScore}&milk=${milkScore}&lang=${lang}`;
             } else {
-                window.location.href = `tryagain.html?score=${score}&obj1=${object1Score}&obj2=${object2Score}&obj3=${object3Score}&lang=${lang}`;
+                window.location.href = `tryagain.html?score=${score}&apple=${appleScore}&banana=${bananaScore}&carrot=${carrotScore}&egg=${eggScore}&milk=${milkScore}&lang=${lang}`;
             }
         });
     }
@@ -394,18 +413,23 @@ function catchItem(bowlContainer, item) {
     }
 
     const points = item.getData('points');
+    const objectType = item.getData('type');
     const objectKey = item.texture.key;
 
-    if (points) {
+    if (points !== undefined && points !== null) {
         score += points;
         
         // Track individual object scores
-        if (objectKey === 'goodObject_1') {
-            object1Score += points;
-        } else if (objectKey === 'goodObject_2') {
-            object2Score += points;
-        } else if (objectKey === 'goodObject_3') {
-            object3Score += points;
+        if (objectKey === 'apple') {
+            appleScore += points;
+        } else if (objectKey === 'banana') {
+            bananaScore += points;
+        } else if (objectKey === 'carrot') {
+            carrotScore += points;
+        } else if (objectKey === 'egg') {
+            eggScore += points;
+        } else if (objectKey === 'milk') {
+            milkScore += points;
         }
         
         this.scoreText.setText(score);
@@ -416,10 +440,15 @@ function catchItem(bowlContainer, item) {
         const splashY = item.y;
 
         const milkSplash = this.add.image(splashX, splashY, 'milkSplash').setOrigin(0.5).setDepth(101).setScale(0.2);
-        const scorePopup = this.add.text(splashX, splashY, `+${points}`, {
+        
+        // Display score with + or - sign based on points value
+        const scoreText = points > 0 ? `+${points}` : `${points}`;
+        const scoreColor = points > 0 ? '#063591' : '#FF0000'; // Blue for positive, red for negative
+        
+        const scorePopup = this.add.text(splashX, splashY, scoreText, {
             fontFamily: 'HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec',
             fontSize: '40px',
-            color: '#063591', // Dark blue color for visibility
+            color: scoreColor,
             fontStyle: 'bold'
         }).setOrigin(0.5).setDepth(102);
 

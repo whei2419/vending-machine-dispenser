@@ -14,7 +14,7 @@ body {
     border: 10px solid #F37021;
     font-size: 48px;
     cursor: pointer;
-    width: 350px;
+    width: 450px;
     height: 110px;
     border-radius: 70px;
     position: relative;
@@ -44,7 +44,7 @@ body {
 
 .buttoncontainer {
     position: absolute;
-    bottom: 36%;
+    bottom: 30%;
     left: 50%;
     transform: translateX(-50%);
 }

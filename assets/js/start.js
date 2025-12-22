@@ -32,7 +32,7 @@ window.onload = function () {
         selectedLang = 'chinese';
     } else {
         body.style.backgroundImage = "url('assets/dutch/start.webp')"; 
-        startButton.innerText = "Start";
+        startButton.innerText = "MULAKAN";
         selectedLang = 'english';
     }
 
