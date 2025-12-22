@@ -7,26 +7,32 @@ window.onload = function () {
     const params = new URLSearchParams(window.location.search);
     const lang = params.get('lang');
     const score = params.get('score');
-    const obj1 = params.get('obj1') || 0;
-    const obj2 = params.get('obj2') || 0;
-    const obj3 = params.get('obj3') || 0;
+    const apple = params.get('apple') || 0;
+    const banana = params.get('banana') || 0;
+    const carrot = params.get('carrot') || 0;
+    const egg = params.get('egg') || 0;
+    const milk = params.get('milk') || 0;
 
     const body = document.body;
     const tryAgainButton = document.getElementById('tryAgainButton');
     const scoreDisplay = document.getElementById('score');
-    const obj1Display = document.getElementById('obj1Score');
-    const obj2Display = document.getElementById('obj2Score');
-    const obj3Display = document.getElementById('obj3Score');
+    const appleDisplay = document.getElementById('appleScore');
+    const bananaDisplay = document.getElementById('bananaScore');
+    const carrotDisplay = document.getElementById('carrotScore');
+    const eggDisplay = document.getElementById('eggScore');
+    const milkDisplay = document.getElementById('milkScore');
 
     console.log(`Score: ${score}`);
 
-    // Display individual scores
-    obj1Display.innerText = obj1;
-    obj2Display.innerText = obj2;
-    obj3Display.innerText = obj3;
+    // Display individual scores for all objects
+    appleDisplay.innerText = apple;
+    bananaDisplay.innerText = banana;
+    carrotDisplay.innerText = carrot;
+    eggDisplay.innerText = egg;
+    milkDisplay.innerText = milk;
 
     body.style.backgroundImage = "url('../assets/dutch/tryagain.webp')";
-    tryAgainButton.innerText = "Try Again";
+    tryAgainButton.innerText = "CUBA LAGI";
     selectedLang = 'english';
     scoreDisplay.innerText = score;
 

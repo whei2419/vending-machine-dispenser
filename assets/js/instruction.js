@@ -15,7 +15,7 @@ window.onload = function () {
         selectedLang = 'chinese';
     } else {
         body.style.backgroundImage = "url('../assets/dutch/instruction.webp')";
-        startButton.innerText = "LET'S GO";
+        startButton.innerText = "SETERUSNYA";
         selectedLang = 'english';
     }
 

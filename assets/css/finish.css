@@ -46,14 +46,14 @@ body {
   font-size: 120px;
   color: #f37021;
   position: absolute;
-  bottom: 451px;
+  bottom: 339px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .buttoncontainer {
   position: absolute;
-  bottom: 18%;
+  bottom: 12%;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -86,17 +86,33 @@ body {
   font-size: 50px;
   color: #114a9f;
   position: absolute;
-  top: 436px;
+  z-index: 99;
+  display: block;
+  text-align: left;
 }
 
-.individual-scores span:nth-child(1) {
-  left: 16%;
+#appleScore {
+  top: 605px;
+  left: 400px;
 }
 
-.individual-scores span:nth-child(2) {
-  left: 48%;
+#bananaScore {s
+  top: 605px;
+  left: 179px;
 }
 
-.individual-scores span:nth-child(3) {
-    left: 76%;
+#carrotScore {
+ top: 605px;
+  left: 862px;
 }
+
+#eggScore {
+ top: 605px;
+  left: 620px;
+}
+
+#milkScore {
+    top: 477px;
+    left: 500px;
+}
+
