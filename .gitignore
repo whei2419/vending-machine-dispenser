@@ -1,3 +1,6 @@
 # Dispenser log files
 dispenser/ActionLog.txt
 dispenser/ErrorLog.txt
+
+# macOS system files
+.DS_Store

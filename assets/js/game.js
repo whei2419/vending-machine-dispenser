@@ -56,6 +56,7 @@ function preload() {
     this.load.audio('countDown', '../assets/audio/countdownsound.mp3');
     this.load.audio('bg-sound', '../assets/audio/bg.mp3');
     this.load.audio('buzzer', '../assets/audio/long-buzzer.mp3');
+    this.load.audio('wrongSound', '../assets/audio/wrong item.mp3');
 
     this.load.image('gamebg', '../assets/dutch/mainBackground.webp' + cacheBuster);  
     
@@ -115,6 +116,7 @@ function create() {
     this.countdownSound = this.sound.add('countDown');
     this.bgSound = this.sound.add('bg-sound', { loop: true });
     this.buzzerSound = this.sound.add('buzzer', { loop: false });
+    this.wrongSound = this.sound.add('wrongSound');
  
     this.countdownSound.play();
 
@@ -371,6 +373,7 @@ function spawnItem() {
     
     item.setOrigin(0.5);
     item.setScale(0.14);
+    
     item.body.setAllowGravity(true);
     item.body.gravity.y = this.dropGravity;
     item.body.velocity.x = Phaser.Math.Between(-30, 30);
@@ -433,7 +436,13 @@ function catchItem(bowlContainer, item) {
         }
         
         this.scoreText.setText(score);
-        this.collectSound.play();
+        
+        // Play appropriate sound based on object type
+        if (objectType === 'negative') {
+            this.wrongSound.play();
+        } else {
+            this.collectSound.play();
+        }
 
         // milk splash effect
         const splashX = item.x;
