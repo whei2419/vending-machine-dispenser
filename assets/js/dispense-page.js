@@ -27,7 +27,7 @@ async function triggerDispense() {
     const progressBar = document.getElementById('progressBar');
     
     // Start progress animation
-    statusDiv.textContent = 'Your reward is dispensing...';
+    statusDiv.textContent = '';
     
     // Animate progress bar from 0% to 100% over 10 seconds
     let progress = 0;
@@ -44,7 +44,7 @@ async function triggerDispense() {
     setTimeout(() => {
         clearInterval(progressInterval);
         progressBar.style.width = '100%';
-        statusDiv.textContent = 'Collection complete! Thank you!';
+        statusDiv.textContent = '';
         statusDiv.style.color = '#ffffff';
         
         // Redirect to index page after 2 seconds
