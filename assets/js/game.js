@@ -35,10 +35,12 @@ var config = {
     width: window.innerWidth,
     height: window.innerHeight,
     parent: 'gameContainer',
+    backgroundColor: 'transparent',
     render: {
         antialias: true,
         pixelArt: false,
-        roundPixels: true
+        roundPixels: true,
+        transparent: true
     },
     physics: {
         default: 'arcade',
@@ -119,6 +121,14 @@ function preload() {
 }
 
 function create() {
+    // Remove the preload background once game is ready
+    const preloadBg = document.getElementById('preloadBackground');
+    if (preloadBg) {
+        preloadBg.style.transition = 'opacity 0.3s';
+        preloadBg.style.opacity = '0';
+        setTimeout(() => preloadBg.remove(), 300);
+    }
+    
     // Set the bounds of the world
     this.physics.world.setBounds(0, 0, this.cameras.main.width, this.cameras.main.height);
 
