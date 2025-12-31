@@ -9,7 +9,7 @@ if "%ERRORLEVEL%"=="0" (
     echo Apache is already running.
 ) else (
     echo Starting Apache...
-    start "" "C:\xampp\apache_start.bat"
+    start "" "C:\xampp8.1\apache_start.bat"
     timeout /t 3 /nobreak >nul
 )
 
@@ -20,7 +20,7 @@ if "%ERRORLEVEL%"=="0" (
     echo MySQL is already running.
 ) else (
     echo Starting MySQL...
-    start "" "C:\xampp\mysql_start.bat"
+    start "" "C:\xampp8.1\mysql_start.bat"
     timeout /t 3 /nobreak >nul
 )
 
