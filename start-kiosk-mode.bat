@@ -25,21 +25,12 @@ if "%ERRORLEVEL%"=="0" (
 )
 
 echo.
-echo Services started. Opening application in fullscreen mode...
+echo Services started. Opening Chrome in fullscreen...
 timeout /t 2 /nobreak >nul
 
-REM Try Chrome first, then Edge
-if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" (
-    echo Using Chrome...
-    start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" --start-fullscreen --app=http://localhost/vending-machine-dispenser/index.html
-) else if exist "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" (
-    echo Using Edge...
-    start "" "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --start-fullscreen --app=http://localhost/vending-machine-dispenser/index.html
-) else (
-    echo Chrome or Edge not found. Opening in default browser...
-    start "" "http://localhost/vending-machine-dispenser/index.html"
-)
+REM Open Chrome in fullscreen with the website
+start chrome --start-fullscreen http://localhost/vending-machine-dispenser/index.html
 
 echo.
-echo Vending Machine Dispenser is now running in fullscreen mode!
+echo Vending Machine Dispenser is now running in fullscreen!
 echo Press F11 to exit fullscreen or Alt+F4 to close.
