@@ -5,6 +5,7 @@ import GamePage from "@/components/GamePage.vue";
 import FinishPage from "@/components/FinishPage.vue";
 import TryAgainPage from "@/components/TryAgainPage.vue";
 import GameOverPage from "@/components/GameOverPage.vue";
+import ConfigPage from "@/components/ConfigPage.vue";
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: "/gameover",
     name: "GameOver",
     component: GameOverPage,
+  },
+  {
+    path: "/config",
+    name: "Config",
+    component: ConfigPage,
   },
 ];
 

@@ -3,6 +3,7 @@
     <img
       :src="logoSrc"
       alt="Logo"
+      @click="goToConfig"
       style="
         position: absolute;
         top: 107px;
@@ -10,6 +11,7 @@
         transform: translateX(-50%);
         z-index: 1000;
         max-width: 323px;
+        cursor: pointer;
       "
     />
     <div class="buttoncontainer">
@@ -81,6 +83,10 @@ export default {
       }
     };
 
+    const goToConfig = () => {
+      router.push({ name: "Config" });
+    };
+
     onMounted(() => {
       const lang = route.query.lang;
       if (lang === "chinese") {
@@ -95,6 +101,7 @@ export default {
       logoSrc,
       handleInteraction,
       handleMouseOut,
+      goToConfig,
     };
   },
 };
