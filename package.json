@@ -1,0 +1,22 @@
+{
+  "name": "vending-machine-dispenser",
+  "version": "1.0.0",
+  "description": "Vending Machine Game with Tauri",
+  "main": "index.html",
+  "scripts": {
+    "tauri": "tauri",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri:init": "tauri init"
+  },
+  "keywords": [
+    "tauri",
+    "vending-machine",
+    "game"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.1.0"
+  }
+}
