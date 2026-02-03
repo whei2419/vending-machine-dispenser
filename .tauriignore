@@ -1,0 +1,17 @@
+# Tauri ignore file - exclude from bundle
+
+node_modules/
+.git/
+.gitignore
+.gitattributes
+.tauriignore
+_.log
+_.bat
+\*.ps1
+README.md
+src-tauri/
+package.json
+package-lock.json
+create-icons.ps1
+setup-tauri.bat
+start-tauri-kiosk.bat
