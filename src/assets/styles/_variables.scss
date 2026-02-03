@@ -1,0 +1,29 @@
+// Asset path shortcuts
+$assets: "@/assets";
+$images: "#{$assets}/images";
+$dutch: "#{$assets}/dutch";
+$audio: "#{$assets}/audio";
+$fonts: "#{$assets}/fonts";
+
+// Colors
+$primary-color: #f37021;
+$white: #ffffff;
+
+// Mixins for common patterns
+@mixin background-cover {
+  background-size: cover;
+  background-position: center;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin fullscreen {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}

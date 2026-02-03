@@ -4,22 +4,21 @@
   "version": "1.0.0",
   "identifier": "com.vendingmachine.app",
   "build": {
-    "frontendDist": "../src",
-    "devUrl": "http://localhost:8080",
-    "beforeDevCommand": "",
-    "beforeBuildCommand": ""
+    "frontendDist": "..",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
   },
   "app": {
     "windows": [
       {
         "title": "Vending Machine Dispenser",
-        "width": 1920,
-        "height": 1080,
+        "width": 1080,
+        "height": 1920,
         "fullscreen": false,
         "resizable": true,
         "decorations": true,
-        "center": true,
-        "fileDropEnabled": false
+        "center": true
       }
     ],
     "security": {
