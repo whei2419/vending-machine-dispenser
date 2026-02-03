@@ -25,6 +25,33 @@ import { useFullscreen } from "@/composables/useFullscreen";
 import Phaser from "phaser";
 import mainBg from "@/assets/dutch/mainBackground.webp";
 
+// Import all game assets
+import collectSoundFile from "@/assets/audio/collect bird nest.mp3";
+import winSoundFile from "@/assets/audio/game won.mp3";
+import countDownSoundFile from "@/assets/audio/countdownsound.mp3";
+import bgSoundFile from "@/assets/audio/bg.mp3";
+import buzzerSoundFile from "@/assets/audio/long-buzzer.mp3";
+import wrongSoundFile from "@/assets/audio/wrong item.mp3";
+
+import appleImg from "@/assets/dutch/fallingObjects/normal/apple.webp";
+import bananaImg from "@/assets/dutch/fallingObjects/normal/banana.webp";
+import carrotImg from "@/assets/dutch/fallingObjects/normal/carrot.webp";
+import eggImg from "@/assets/dutch/fallingObjects/normal/egg.webp";
+import negative1Img from "@/assets/dutch/fallingObjects/negative/(3B) 1 Minus One Point.webp";
+import negative2Img from "@/assets/dutch/fallingObjects/negative/(3B) 2 Minus One Point.webp";
+import negative3Img from "@/assets/dutch/fallingObjects/negative/(3B) 3 Minus One Point.webp";
+import negative4Img from "@/assets/dutch/fallingObjects/negative/(3B) 4 Minus One Point.webp";
+import milkImg from "@/assets/dutch/fallingObjects/special/milk.webp";
+
+import explosionImg from "@/assets/images/exp.png";
+import countdownImg from "@/assets/images/countdown.webp";
+import countdownReadyImg from "@/assets/dutch/countdown_reaady.webp";
+import bowlImg from "@/assets/dutch/bowl.webp";
+import logoImg from "@/assets/dutch/logo.webp";
+import timerImg from "@/assets/dutch/timer.webp";
+import totalScoreImg from "@/assets/dutch/totalscore.webp";
+import milkSplashImg from "@/assets/dutch/milk splash.png";
+
 export default {
   name: "GamePage",
   setup() {
@@ -96,90 +123,67 @@ export default {
       };
 
       function preload() {
-        this.load.audio(
-          "collectSound",
-          "/src/assets/audio/collect bird nest.mp3",
-        );
-        this.load.audio("win", "/src/assets/audio/game won.mp3");
-        this.load.audio("countDown", "/src/assets/audio/countdownsound.mp3");
-        this.load.audio("bg-sound", "/src/assets/audio/bg.mp3");
-        this.load.audio("buzzer", "/src/assets/audio/long-buzzer.mp3");
-        this.load.audio("wrongSound", "/src/assets/audio/wrong item.mp3");
+        this.load.audio("collectSound", collectSoundFile);
+        this.load.audio("win", winSoundFile);
+        this.load.audio("countDown", countDownSoundFile);
+        this.load.audio("bg-sound", bgSoundFile);
+        this.load.audio("buzzer", buzzerSoundFile);
+        this.load.audio("wrongSound", wrongSoundFile);
 
-        this.load.image(
-          "gamebg",
-          "/src/assets/dutch/mainBackground.webp" + cacheBuster,
-        );
+        this.load.image("gamebg", mainBg);
 
         this.fallingObjects = [
           {
             key: "apple",
-            path:
-              "/src/assets/dutch/fallingObjects/normal/apple.webp" +
-              cacheBuster,
+            path: appleImg,
             type: "normal",
             points: gameConfig.appleScore,
           },
           {
             key: "banana",
-            path:
-              "/src/assets/dutch/fallingObjects/normal/banana.webp" +
-              cacheBuster,
+            path: bananaImg,
             type: "normal",
             points: gameConfig.bananaScore,
           },
           {
             key: "carrot",
-            path:
-              "/src/assets/dutch/fallingObjects/normal/carrot.webp" +
-              cacheBuster,
+            path: carrotImg,
             type: "normal",
             points: gameConfig.carrotScore,
           },
           {
             key: "egg",
-            path:
-              "/src/assets/dutch/fallingObjects/normal/egg.webp" + cacheBuster,
+            path: eggImg,
             type: "normal",
             points: gameConfig.eggScore,
           },
           {
             key: "negative_1",
-            path:
-              "/src/assets/dutch/fallingObjects/negative/(3B) 1 Minus One Point.webp" +
-              cacheBuster,
+            path: negative1Img,
             type: "negative",
             points: gameConfig.negativeScore,
           },
           {
             key: "negative_2",
-            path:
-              "/src/assets/dutch/fallingObjects/negative/(3B) 2 Minus One Point.webp" +
-              cacheBuster,
+            path: negative2Img,
             type: "negative",
             points: gameConfig.negativeScore,
           },
           {
             key: "negative_3",
-            path:
-              "/src/assets/dutch/fallingObjects/negative/(3B) 3 Minus One Point.webp" +
-              cacheBuster,
+            path: negative3Img,
             type: "negative",
             points: gameConfig.negativeScore,
           },
           {
             key: "negative_4",
-            path:
-              "/src/assets/dutch/fallingObjects/negative/(3B) 4 Minus One Point.webp" +
-              cacheBuster,
+            path: negative4Img,
             type: "negative",
             points: gameConfig.negativeScore,
           },
           {
             key: "milk",
-            path:
-              "/src/assets/dutch/fallingObjects/special/milk.webp" +
-              cacheBuster,
+            path: milkImg,
             type: "special",
             points: gameConfig.milkScore,
           },
@@ -189,33 +193,17 @@ export default {
           this.load.image(obj.key, obj.path);
         });
 
-        this.load.spritesheet(
-          "explosion",
-          "/src/assets/images/exp.png" + cacheBuster,
-          { frameWidth: 300, frameHeight: 300 },
-        );
-        this.load.image(
-          "countdown",
-          "/src/assets/images/countdown.webp" + cacheBuster,
-        );
-        this.load.image(
-          "countdownReady",
-          "/src/assets/dutch/countdown_reaady.webp" + cacheBuster,
-        );
-        this.load.image("bowl", "/src/assets/dutch/bowl.webp" + cacheBuster);
-        this.load.image("logo", "/src/assets/dutch/logo.webp" + cacheBuster);
-        this.load.image(
-          "timerContainerBg",
-          "/src/assets/dutch/timer.webp" + cacheBuster,
-        );
-        this.load.image(
-          "scoreContainerBg",
-          "/src/assets/dutch/totalscore.webp" + cacheBuster,
-        );
-        this.load.image(
-          "milkSplash",
-          "/src/assets/dutch/milk splash.png" + cacheBuster,
-        );
+        this.load.spritesheet("explosion", explosionImg, {
+          frameWidth: 300,
+          frameHeight: 300,
+        });
+        this.load.image("countdown", countdownImg);
+        this.load.image("countdownReady", countdownReadyImg);
+        this.load.image("bowl", bowlImg);
+        this.load.image("logo", logoImg);
+        this.load.image("timerContainerBg", timerImg);
+        this.load.image("scoreContainerBg", totalScoreImg);
+        this.load.image("milkSplash", milkSplashImg);
       }
 
       function create() {
