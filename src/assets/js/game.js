@@ -16,8 +16,8 @@ function getConfig() {
     appleScore: 10,
     bananaScore: 10,
     carrotScore: 10,
-    eggScore: 1,
-    milkScore: 3,
+    // egg and milk removed
+    objectScale: 0.9,
     negativeScore: -1,
     winScore: 20,
     gameTimer: 30,
@@ -64,8 +64,7 @@ var score = 0;
 var appleScore = 0;
 var bananaScore = 0;
 var carrotScore = 0;
-var eggScore = 0;
-var milkScore = 0;
+// egg and milk removed
 
 var countdownText;
 var timerText;
@@ -141,7 +140,6 @@ function preload() {
     "milkSplash",
     "../assets/dutch/milk splash.png" + cacheBuster,
   );
-}
 
 function create() {
   // Remove the preload background once game is ready
@@ -469,7 +467,7 @@ function spawnItem() {
   var randomItem = Phaser.Math.RND.pick(this.fallingObjects);
 
   // Calculate item width for safe spawn using the render scale
-  const itemRenderScale = 0.28; // larger visual size
+  const itemRenderScale = (gameConfig && gameConfig.objectScale) ? gameConfig.objectScale : 0.9; // configurable visual size
   const texture = this.textures.get(randomItem.key);
   const frame = texture.getSourceImage ? texture.getSourceImage() : null;
   const itemWidth = frame
@@ -542,10 +540,6 @@ function catchItem(bowlContainer, item) {
       bananaScore += points;
     } else if (objectKey === "carrot") {
       carrotScore += points;
-    } else if (objectKey === "egg") {
-      eggScore += points;
-    } else if (objectKey === "milk") {
-      milkScore += points;
     }
 
     this.scoreText.setText(score);
@@ -561,13 +555,13 @@ function catchItem(bowlContainer, item) {
     const splashX = item.x;
     const splashY = item.y;
 
+    // Display score with + or - sign based on points value
     const milkSplash = this.add
       .image(splashX, splashY, "milkSplash")
       .setOrigin(0.5)
       .setDepth(101)
       .setScale(0.2);
 
-    // Display score with + or - sign based on points value
     const scoreText = points > 0 ? `+${points}` : `${points}`;
     const scoreColor = points > 0 ? "#063591" : "#FF0000"; // Blue for positive, red for negative
 

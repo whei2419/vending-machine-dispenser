@@ -3,8 +3,7 @@ const DEFAULT_CONFIG = {
   appleScore: 10,
   bananaScore: 10,
   carrotScore: 10,
-  eggScore: 1,
-  milkScore: 3,
+  objectScale: 0.9,
   negativeScore: -1,
   winScore: 20,
   gameTimer: 30,
@@ -41,8 +40,6 @@ function populateForm() {
   document.getElementById("appleScore").value = config.appleScore;
   document.getElementById("bananaScore").value = config.bananaScore;
   document.getElementById("carrotScore").value = config.carrotScore;
-  document.getElementById("eggScore").value = config.eggScore;
-  document.getElementById("milkScore").value = config.milkScore;
   document.getElementById("negativeScore").value = config.negativeScore;
   document.getElementById("winScore").value = config.winScore;
   document.getElementById("gameTimer").value = config.gameTimer;
@@ -50,6 +47,12 @@ function populateForm() {
   document.getElementById("minSpawnDelay").value = config.minSpawnDelay;
   document.getElementById("initialGravity").value = config.initialGravity;
   document.getElementById("maxGravity").value = config.maxGravity;
+  if (document.getElementById("objectScale")) {
+    document.getElementById("objectScale").value =
+      config.objectScale !== undefined
+        ? config.objectScale
+        : DEFAULT_CONFIG.objectScale;
+  }
 }
 
 // Show message
@@ -78,8 +81,6 @@ window.onload = function () {
         appleScore: parseInt(document.getElementById("appleScore").value),
         bananaScore: parseInt(document.getElementById("bananaScore").value),
         carrotScore: parseInt(document.getElementById("carrotScore").value),
-        eggScore: parseInt(document.getElementById("eggScore").value),
-        milkScore: parseInt(document.getElementById("milkScore").value),
         negativeScore: parseInt(document.getElementById("negativeScore").value),
         winScore: parseInt(document.getElementById("winScore").value),
         gameTimer: parseInt(document.getElementById("gameTimer").value),
@@ -91,6 +92,10 @@ window.onload = function () {
           document.getElementById("initialGravity").value,
         ),
         maxGravity: parseInt(document.getElementById("maxGravity").value),
+        objectScale: parseFloat(
+          document.getElementById("objectScale").value ||
+            DEFAULT_CONFIG.objectScale,
+        ),
       };
 
       saveConfig(config);

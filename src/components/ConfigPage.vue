@@ -7,7 +7,7 @@
         <div class="config-section">
           <h2>Object Scores</h2>
           <div class="config-group">
-            <label for="appleScore">Apple Score:</label>
+            <label for="appleScore">Magnify Score:</label>
             <input
               type="number"
               id="appleScore"
@@ -17,7 +17,7 @@
             />
           </div>
           <div class="config-group">
-            <label for="bananaScore">Banana Score:</label>
+            <label for="bananaScore">Octagon Score:</label>
             <input
               type="number"
               id="bananaScore"
@@ -27,33 +27,13 @@
             />
           </div>
           <div class="config-group">
-            <label for="carrotScore">Carrot Score:</label>
+            <label for="carrotScore">World Score:</label>
             <input
               type="number"
               id="carrotScore"
               v-model.number="config.carrotScore"
               min="-10"
               max="10"
-            />
-          </div>
-          <div class="config-group">
-            <label for="eggScore">Egg Score:</label>
-            <input
-              type="number"
-              id="eggScore"
-              v-model.number="config.eggScore"
-              min="-10"
-              max="10"
-            />
-          </div>
-          <div class="config-group">
-            <label for="milkScore">Milk Score (Special):</label>
-            <input
-              type="number"
-              id="milkScore"
-              v-model.number="config.milkScore"
-              min="-10"
-              max="20"
             />
           </div>
           <div class="config-group">
@@ -90,6 +70,20 @@
               min="10"
               max="300"
             />
+          </div>
+          <div class="config-group">
+            <label for="objectScale">Object Scale (0.1 - 2.0):</label>
+            <input
+              type="number"
+              id="objectScale"
+              v-model.number="config.objectScale"
+              min="0.1"
+              max="2"
+              step="0.05"
+            />
+            <span class="help-text"
+              >Visual scale applied to falling objects</span
+            >
           </div>
         </div>
 
@@ -175,8 +169,7 @@ const DEFAULT_CONFIG = {
   appleScore: 10,
   bananaScore: 10,
   carrotScore: 10,
-  eggScore: 1,
-  milkScore: 3,
+  objectScale: 0.9,
   negativeScore: -1,
   winScore: 20,
   gameTimer: 30,
