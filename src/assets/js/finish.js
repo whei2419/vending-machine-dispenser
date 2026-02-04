@@ -10,26 +10,20 @@ window.onload = function () {
   const apple = params.get("apple") || 0;
   const banana = params.get("banana") || 0;
   const carrot = params.get("carrot") || 0;
-  const egg = params.get("egg") || 0;
-  const milk = params.get("milk") || 0;
 
   const body = document.body;
   const startButton = document.getElementById("startButton");
   const scoreDisplay = document.getElementById("score");
-  const appleDisplay = document.getElementById("appleScore");
-  const bananaDisplay = document.getElementById("bananaScore");
-  const carrotDisplay = document.getElementById("carrotScore");
-  const eggDisplay = document.getElementById("eggScore");
-  const milkDisplay = document.getElementById("milkScore");
+  const appleDisplay = document.getElementById("magnifyScore");
+  const bananaDisplay = document.getElementById("octagonScore");
+  const carrotDisplay = document.getElementById("worldScore");
 
   console.log(`Score: ${score}`);
 
-  // Display individual scores for all objects
+  // Display individual scores for objects that remain
   appleDisplay.innerText = apple;
   bananaDisplay.innerText = banana;
   carrotDisplay.innerText = carrot;
-  eggDisplay.innerText = egg;
-  milkDisplay.innerText = milk;
 
   if (lang === "chinese") {
     body.style.backgroundImage = "url('../assets/ch-end.png')";

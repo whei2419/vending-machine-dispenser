@@ -17,11 +17,9 @@
     </div>
 
     <div class="individual-scores">
-      <span id="appleScore">{{ apple }}</span>
-      <span id="bananaScore">{{ banana }}</span>
-      <span id="carrotScore">{{ carrot }}</span>
-      <span id="eggScore">{{ egg }}</span>
-      <span id="milkScore">{{ milk }}</span>
+      <span id="magnifyScore">{{ apple }}</span>
+      <span id="octagonScore">{{ banana }}</span>
+      <span id="worldScore">{{ carrot }}</span>
     </div>
 
     <div class="buttoncontainer">
@@ -61,8 +59,6 @@ export default {
     const apple = ref(0);
     const banana = ref(0);
     const carrot = ref(0);
-    const egg = ref(0);
-    const milk = ref(0);
     let hoverTimer = null;
 
     const buttonText = computed(() => {
@@ -108,8 +104,6 @@ export default {
       apple.value = route.query.apple || 0;
       banana.value = route.query.banana || 0;
       carrot.value = route.query.carrot || 0;
-      egg.value = route.query.egg || 0;
-      milk.value = route.query.milk || 0;
     });
 
     return {
@@ -121,8 +115,6 @@ export default {
       apple,
       banana,
       carrot,
-      egg,
-      milk,
       handleInteraction,
       handleMouseOut,
     };
@@ -173,14 +165,14 @@ export default {
   font-size: 120px;
   color: $primary-color;
   position: absolute;
-  bottom: 335px;
+  bottom: 444px;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .buttoncontainer {
   position: absolute;
-  bottom: 11%;
+  bottom: 17%;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -202,28 +194,18 @@ export default {
   text-align: left;
 }
 
-#appleScore {
-  top: 605px;
-  left: 400px;
+#magnifyScore {
+  top: 437px;
+  left: 195px;
 }
 
-#bananaScore {
-  top: 605px;
-  left: 179px;
+#octagonScore {
+  top: 437px;
+  left: 514px;
 }
 
-#carrotScore {
-  top: 605px;
-  left: 862px;
-}
-
-#eggScore {
-  top: 605px;
-  left: 620px;
-}
-
-#milkScore {
-  top: 477px;
-  left: 500px;
+#worldScore {
+  top: 437px;
+  left: 825px;
 }
 </style>

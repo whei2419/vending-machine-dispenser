@@ -143,7 +143,7 @@ export default {
 
 .buttoncontainer {
   position: absolute;
-  bottom: 30%;
+  bottom: 37%;
   left: 50%;
   transform: translateX(-50%);
 }

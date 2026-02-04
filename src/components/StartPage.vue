@@ -1,6 +1,6 @@
 <template>
   <div class="page-dispenser" :style="backgroundStyle">
-    <img
+    <!-- <img
       :src="logoSrc"
       alt="Logo"
       @click="goToConfig"
@@ -13,7 +13,7 @@
         max-width: 323px;
         cursor: pointer;
       "
-    />
+    /> -->
     <div class="buttoncontainer">
       <button
         id="startButton"
@@ -50,7 +50,7 @@ export default {
     let hoverTimer = null;
 
     const buttonText = computed(() => {
-      return selectedLang.value === "chinese" ? "开始" : "MULAKAN";
+      return selectedLang.value === "chinese" ? "开始" : "MULA!";
     });
 
     const backgroundStyle = computed(() => {
