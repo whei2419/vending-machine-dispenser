@@ -3,6 +3,7 @@ import StartPage from "@/components/StartPage.vue";
 import InstructionPage from "@/components/InstructionPage.vue";
 import GamePage from "@/components/GamePage.vue";
 import FinishPage from "@/components/FinishPage.vue";
+import SpecialPage from "@/components/SpecialPage.vue";
 import TryAgainPage from "@/components/TryAgainPage.vue";
 import GameOverPage from "@/components/GameOverPage.vue";
 import ConfigPage from "@/components/ConfigPage.vue";
@@ -27,6 +28,11 @@ const routes = [
     path: "/finish",
     name: "Finish",
     component: FinishPage,
+  },
+  {
+    path: "/special",
+    name: "Special",
+    component: SpecialPage,
   },
   {
     path: "/tryagain",
