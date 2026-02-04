@@ -1,27 +1,19 @@
 <template>
-  <div class="page-finish" :style="backgroundStyle">
-    <img
+  <div class="page-dispenser" :style="backgroundStyle">
+    <!-- <img
       :src="logoSrc"
       alt="Logo"
+      @click="goToConfig"
       style="
         position: absolute;
-        top: 80px;
+        top: 107px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 1000;
-        max-width: 273px;
+        max-width: 323px;
+        cursor: pointer;
       "
-    />
-    <div class="score">
-      <p id="score">{{ score }}</p>
-    </div>
-
-    <div class="individual-scores">
-      <span id="magnifyScore">{{ apple }}</span>
-      <span id="octagonScore">{{ banana }}</span>
-      <span id="worldScore">{{ carrot }}</span>
-    </div>
-
+    /> -->
     <div class="buttoncontainer">
       <button
         id="startButton"
@@ -42,30 +34,27 @@
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useFullscreen } from "@/composables/useFullscreen";
-import bgEnglish from "@/assets/dutch/success.webp";
+import bgEnglish from "@/assets/dutch/special.webp";
 import logoImg from "@/assets/dutch/logo.webp";
 import selectSoundFile from "@/assets/audio/select-sound.mp3";
 import completeSoundFile from "@/assets/audio/completed.mp3";
 
 export default {
-  name: "FinishPage",
+  name: "SpecialPage",
   setup() {
     const router = useRouter();
     const route = useRoute();
     useFullscreen();
     const selectedLang = ref("english");
     const isLoading = ref(false);
-    const score = ref(0);
-    const apple = ref(0);
-    const banana = ref(0);
-    const carrot = ref(0);
     let hoverTimer = null;
 
     const buttonText = computed(() => {
-      return selectedLang.value === "chinese" ? "结束" : "SELESAI";
+      return selectedLang.value === "chinese" ? "开始" : "SELESAI";
     });
 
     const backgroundStyle = computed(() => {
+      // Using the same background for both languages since Chinese version doesn't exist
       return { backgroundImage: `url(${bgEnglish})` };
     });
 
@@ -81,30 +70,28 @@ export default {
 
       hoverTimer = setTimeout(() => {
         completeSound.play();
-        setTimeout(() => {
-          router.push({
-            name: "Special",
-            query: { lang: selectedLang.value },
-          });
-        }, 500);
+        router.push({
+          name: "Start",
+          query: { lang: selectedLang.value },
+        });
       }, 1000);
     };
 
     const handleMouseOut = () => {
       if (!isLoading.value) {
         clearTimeout(hoverTimer);
-        isLoading.value = false;
       }
+    };
+
+    const goToConfig = () => {
+      router.push({ name: "Config" });
     };
 
     onMounted(() => {
       const lang = route.query.lang;
-      if (lang) selectedLang.value = lang;
-
-      score.value = route.query.score || 0;
-      apple.value = route.query.apple || 0;
-      banana.value = route.query.banana || 0;
-      carrot.value = route.query.carrot || 0;
+      if (lang === "chinese") {
+        selectedLang.value = "chinese";
+      }
     });
 
     return {
@@ -112,22 +99,21 @@ export default {
       buttonText,
       backgroundStyle,
       logoSrc,
-      score,
-      apple,
-      banana,
-      carrot,
       handleInteraction,
       handleMouseOut,
+      goToConfig,
     };
   },
 };
 </script>
 
 <style scoped lang="scss">
-.page-finish {
+.page-dispenser {
   @include fullscreen;
   @include background-cover;
   position: relative;
+
+  // The background is set dynamically via :style binding
 }
 
 .start-button {
@@ -162,51 +148,36 @@ export default {
   }
 }
 
-.score {
-  font-size: 120px;
-  color: $primary-color;
-  position: absolute;
-  bottom: 449px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
 .buttoncontainer {
   position: absolute;
-  bottom: 17%;
+  bottom: 44%;
   left: 50%;
   transform: translateX(-50%);
 }
 
-#score {
-  font-size: 84px;
-  color: $primary-color;
-  padding: 0;
-  margin: 0;
-  line-height: 117px;
-}
-
-.individual-scores span {
-  font-size: 50px;
-  color: #114a9f;
+.config-button {
   position: absolute;
-  z-index: 99;
-  display: block;
-  text-align: left;
+  top: 18px;
+  left: 18px;
+  z-index: 1100;
+  background: rgba(0, 0, 0, 0.35);
+  border: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 6px;
 }
 
-#magnifyScore {
-  top: 437px;
-  left: 195px;
+.config-button:hover {
+  background: rgba(0, 0, 0, 0.5);
 }
 
-#octagonScore {
-  top: 437px;
-  left: 514px;
-}
-
-#worldScore {
-  top: 437px;
-  left: 825px;
+.config-button i {
+  color: #fff;
+  font-size: 20px;
 }
 </style>

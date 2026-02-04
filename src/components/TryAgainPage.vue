@@ -83,7 +83,7 @@ export default {
         completeSound.play();
         setTimeout(() => {
           router.push({
-            name: "Game",
+            name: "Instruction",
             query: { lang: selectedLang.value },
           });
         }, 500);
