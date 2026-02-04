@@ -1,6 +1,6 @@
 <template>
   <div class="page-instruction" :style="backgroundStyle">
-    <img
+    <!-- <img
       :src="logoSrc"
       alt="Logo"
       style="
@@ -11,7 +11,7 @@
         z-index: 1000;
         max-width: 283px;
       "
-    />
+    /> -->
     <div class="buttoncontainer">
       <button
         id="startButton"
