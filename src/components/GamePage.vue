@@ -14,6 +14,12 @@
         zIndex: 0,
       }"
     ></div>
+    <button class="config-button" @click="openConfig" title="Settings" aria-label="Settings">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V20a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 1 1 2.28 16.88l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H4a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82L5.33 2.28A2 2 0 1 1 8.16.45l.06.06a1.65 1.65 0 0 0 1.82.33H10a1.65 1.65 0 0 0 1-1.51V0a2 2 0 1 1 4 0v.09c.14.6.6 1.08 1.2 1.3.6.22 1.24.08 1.72-.26l.06-.06A2 2 0 1 1 21.72 7.12l-.06.06c-.34.48-.48 1.12-.26 1.72.22.6.7 1.06 1.3 1.2H24a2 2 0 1 1 0 4h-.09c-.6.14-1.08.6-1.3 1.2-.22.6-.08 1.24.26 1.72l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33c-.6.22-1.08.7-1.2 1.3V24a2 2 0 1 1-4 0v-.09c-.14-.6-.6-1.08-1.2-1.3-.6-.22-1.24-.08-1.72.26l-.06.06A2 2 0 1 1 2.28 16.88l.06-.06a1.65 1.65 0 0 0 .33-1.82c-.22-.6-.7-1.08-1.3-1.2H0a2 2 0 1 1 0-4h.09c.6-.14 1.08-.6 1.3-1.2.22-.6.08-1.24-.26-1.72L.97 2.28A2 2 0 1 1 3.8.45l.06.06c.48.34 1.12.48 1.72.26.6-.22 1.08-.7 1.3-1.3V0a2 2 0 1 1 4 0v.09c.14.6.6 1.08 1.2 1.3.6.22 1.24.08 1.72-.26l.06-.06A2 2 0 1 1 21.72 7.12l-.06.06c-.34.48-.48 1.12-.26 1.72.22.6.7 1.06 1.3 1.2H24" stroke="#fff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
     <div id="gameContainer" style="position: relative; z-index: 1"></div>
   </div>
 </template>
@@ -33,15 +39,9 @@ import bgSoundFile from "@/assets/audio/bg.mp3";
 import buzzerSoundFile from "@/assets/audio/long-buzzer.mp3";
 import wrongSoundFile from "@/assets/audio/wrong item.mp3";
 
-import appleImg from "@/assets/dutch/fallingObjects/normal/apple.webp";
-import bananaImg from "@/assets/dutch/fallingObjects/normal/banana.webp";
-import carrotImg from "@/assets/dutch/fallingObjects/normal/carrot.webp";
-import eggImg from "@/assets/dutch/fallingObjects/normal/egg.webp";
-import negative1Img from "@/assets/dutch/fallingObjects/negative/(3B) 1 Minus One Point.webp";
-import negative2Img from "@/assets/dutch/fallingObjects/negative/(3B) 2 Minus One Point.webp";
-import negative3Img from "@/assets/dutch/fallingObjects/negative/(3B) 3 Minus One Point.webp";
-import negative4Img from "@/assets/dutch/fallingObjects/negative/(3B) 4 Minus One Point.webp";
-import milkImg from "@/assets/dutch/fallingObjects/special/milk.webp";
+import magnifyImg from "@/assets/dutch/fallingObjects/normal/magnify.webp";
+import octagonImg from "@/assets/dutch/fallingObjects/normal/octagon.webp";
+import worldImg from "@/assets/dutch/fallingObjects/normal/world.webp";
 
 import explosionImg from "@/assets/images/exp.png";
 import countdownImg from "@/assets/images/countdown.webp";
@@ -66,12 +66,31 @@ export default {
     const getConfig = () => {
       const savedConfig = localStorage.getItem("gameConfig");
       if (savedConfig) {
-        return JSON.parse(savedConfig);
+        try {
+          const cfg = JSON.parse(savedConfig);
+          let migrated = false;
+          if (cfg.appleScore === 1) {
+            cfg.appleScore = 10;
+            migrated = true;
+          }
+          if (cfg.bananaScore === 1) {
+            cfg.bananaScore = 10;
+            migrated = true;
+          }
+          if (cfg.carrotScore === 1) {
+            cfg.carrotScore = 10;
+            migrated = true;
+          }
+          if (migrated) localStorage.setItem("gameConfig", JSON.stringify(cfg));
+          return cfg;
+        } catch (e) {
+          return JSON.parse(savedConfig);
+        }
       }
       return {
-        appleScore: 1,
-        bananaScore: 1,
-        carrotScore: 1,
+        appleScore: 10,
+        bananaScore: 10,
+        carrotScore: 10,
         eggScore: 1,
         milkScore: 3,
         negativeScore: -1,
@@ -135,57 +154,21 @@ export default {
         this.fallingObjects = [
           {
             key: "apple",
-            path: appleImg,
+            path: magnifyImg,
             type: "normal",
             points: gameConfig.appleScore,
           },
           {
             key: "banana",
-            path: bananaImg,
+            path: octagonImg,
             type: "normal",
             points: gameConfig.bananaScore,
           },
           {
             key: "carrot",
-            path: carrotImg,
+            path: worldImg,
             type: "normal",
             points: gameConfig.carrotScore,
-          },
-          {
-            key: "egg",
-            path: eggImg,
-            type: "normal",
-            points: gameConfig.eggScore,
-          },
-          {
-            key: "negative_1",
-            path: negative1Img,
-            type: "negative",
-            points: gameConfig.negativeScore,
-          },
-          {
-            key: "negative_2",
-            path: negative2Img,
-            type: "negative",
-            points: gameConfig.negativeScore,
-          },
-          {
-            key: "negative_3",
-            path: negative3Img,
-            type: "negative",
-            points: gameConfig.negativeScore,
-          },
-          {
-            key: "negative_4",
-            path: negative4Img,
-            type: "negative",
-            points: gameConfig.negativeScore,
-          },
-          {
-            key: "milk",
-            path: milkImg,
-            type: "special",
-            points: gameConfig.milkScore,
           },
         ];
 
@@ -490,7 +473,8 @@ export default {
         item.setData("type", randomItem.type);
 
         item.setOrigin(0.5);
-        item.setScale(0.14);
+        // Increase falling object visual size
+        item.setScale(0.28);
 
         item.body.setAllowGravity(true);
         item.body.gravity.y = this.dropGravity;
@@ -527,8 +511,6 @@ export default {
                   apple: appleScore,
                   banana: bananaScore,
                   carrot: carrotScore,
-                  egg: eggScore,
-                  milk: milkScore,
                   lang,
                 },
               });
@@ -540,8 +522,6 @@ export default {
                   apple: appleScore,
                   banana: bananaScore,
                   carrot: carrotScore,
-                  egg: eggScore,
-                  milk: milkScore,
                   lang,
                 },
               });
@@ -652,8 +632,13 @@ export default {
       }
     });
 
+      const openConfig = () => {
+        router.push({ name: "Config" });
+      };
+
     return {
-      mainBg,
+        mainBg,
+        openConfig,
     };
   },
 };
@@ -665,4 +650,27 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
+.config-button {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 1100;
+  background: rgba(0,0,0,0.35);
+  border: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.config-button:hover {
+  background: rgba(0,0,0,0.5);
+}
+
+.config-button svg { filter: drop-shadow(0 1px 0 rgba(0,0,0,0.4)); }
 </style>

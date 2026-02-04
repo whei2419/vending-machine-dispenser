@@ -172,9 +172,9 @@ const router = useRouter();
 useFullscreen();
 
 const DEFAULT_CONFIG = {
-  appleScore: 1,
-  bananaScore: 1,
-  carrotScore: 1,
+  appleScore: 10,
+  bananaScore: 10,
+  carrotScore: 10,
   eggScore: 1,
   milkScore: 3,
   negativeScore: -1,
