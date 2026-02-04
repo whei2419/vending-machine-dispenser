@@ -1,5 +1,13 @@
 <template>
   <div class="page-dispenser" :style="backgroundStyle">
+    <button
+      class="config-button"
+      @click="goToConfig"
+      title="Settings"
+      aria-label="Settings"
+    >
+      <i class="fa-solid fa-gear"></i>
+    </button>
     <!-- <img
       :src="logoSrc"
       alt="Logo"
@@ -153,5 +161,31 @@ export default {
   bottom: 44%;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.config-button {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 1100;
+  background: rgba(0, 0, 0, 0.35);
+  border: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.config-button:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.config-button i {
+  color: #fff;
+  font-size: 20px;
 }
 </style>

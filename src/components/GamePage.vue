@@ -14,12 +14,7 @@
         zIndex: 0,
       }"
     ></div>
-    <button class="config-button" @click="openConfig" title="Settings" aria-label="Settings">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V20a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06A2 2 0 1 1 2.28 16.88l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H4a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82L5.33 2.28A2 2 0 1 1 8.16.45l.06.06a1.65 1.65 0 0 0 1.82.33H10a1.65 1.65 0 0 0 1-1.51V0a2 2 0 1 1 4 0v.09c.14.6.6 1.08 1.2 1.3.6.22 1.24.08 1.72-.26l.06-.06A2 2 0 1 1 21.72 7.12l-.06.06c-.34.48-.48 1.12-.26 1.72.22.6.7 1.06 1.3 1.2H24a2 2 0 1 1 0 4h-.09c-.6.14-1.08.6-1.3 1.2-.22.6-.08 1.24.26 1.72l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33c-.6.22-1.08.7-1.2 1.3V24a2 2 0 1 1-4 0v-.09c-.14-.6-.6-1.08-1.2-1.3-.6-.22-1.24-.08-1.72.26l-.06.06A2 2 0 1 1 2.28 16.88l.06-.06a1.65 1.65 0 0 0 .33-1.82c-.22-.6-.7-1.08-1.3-1.2H0a2 2 0 1 1 0-4h.09c.6-.14 1.08-.6 1.3-1.2.22-.6.08-1.24-.26-1.72L.97 2.28A2 2 0 1 1 3.8.45l.06.06c.48.34 1.12.48 1.72.26.6-.22 1.08-.7 1.3-1.3V0a2 2 0 1 1 4 0v.09c.14.6.6 1.08 1.2 1.3.6.22 1.24.08 1.72-.26l.06-.06A2 2 0 1 1 21.72 7.12l-.06.06c-.34.48-.48 1.12-.26 1.72.22.6.7 1.06 1.3 1.2H24" stroke="#fff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
+    <!-- config button moved to StartPage (top-left) -->
     <div id="gameContainer" style="position: relative; z-index: 1"></div>
   </div>
 </template>
@@ -91,8 +86,8 @@ export default {
         appleScore: 10,
         bananaScore: 10,
         carrotScore: 10,
-        eggScore: 1,
-        milkScore: 3,
+        // egg and milk removed
+        objectScale: 0.9,
         negativeScore: -1,
         winScore: 20,
         gameTimer: 30,
@@ -112,8 +107,6 @@ export default {
       let appleScore = 0;
       let bananaScore = 0;
       let carrotScore = 0;
-      let eggScore = 0;
-      let milkScore = 0;
 
       const config = {
         type: Phaser.AUTO,
@@ -473,8 +466,8 @@ export default {
         item.setData("type", randomItem.type);
 
         item.setOrigin(0.5);
-        // Increase falling object visual size
-        item.setScale(0.28);
+        // Increase falling object visual size (from config)
+        item.setScale(gameConfig.objectScale || 0.9);
 
         item.body.setAllowGravity(true);
         item.body.gravity.y = this.dropGravity;
@@ -550,10 +543,6 @@ export default {
             bananaScore += points;
           } else if (objectKey === "carrot") {
             carrotScore += points;
-          } else if (objectKey === "egg") {
-            eggScore += points;
-          } else if (objectKey === "milk") {
-            milkScore += points;
           }
 
           this.scoreText.setText(score);
@@ -632,13 +621,13 @@ export default {
       }
     });
 
-      const openConfig = () => {
-        router.push({ name: "Config" });
-      };
+    const openConfig = () => {
+      router.push({ name: "Config" });
+    };
 
     return {
-        mainBg,
-        openConfig,
+      mainBg,
+      openConfig,
     };
   },
 };
@@ -651,26 +640,5 @@ export default {
   overflow: hidden;
 }
 
-.config-button {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  z-index: 1100;
-  background: rgba(0,0,0,0.35);
-  border: none;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  padding: 6px;
-}
-
-.config-button:hover {
-  background: rgba(0,0,0,0.5);
-}
-
-.config-button svg { filter: drop-shadow(0 1px 0 rgba(0,0,0,0.4)); }
+/* config button moved to StartPage.vue */
 </style>
