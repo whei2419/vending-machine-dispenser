@@ -233,6 +233,18 @@ export default {
           ),
         );
 
+        // ── Edge flash overlay ──
+        this.edgeFlash = this.add
+          .rectangle(
+            this.cameras.main.centerX,
+            this.cameras.main.centerY,
+            this.cameras.main.width,
+            this.cameras.main.height,
+            0xffffff,
+            0,
+          )
+          .setDepth(200)
+          .setAlpha(0);
 
         this.bowl = this.add.sprite(0, -40, "bowl").setOrigin(0.5);
         this.bowl.setScale(0.4);
@@ -264,6 +276,8 @@ export default {
         );
         this.maxDropGravity = Math.round(gameConfig.maxGravity * 1.5);
         this.isGameOver = false;
+        this.displayedScore = 0; // for animated score counter
+        this.speedWarningShown = false;
 
         this.items = this.physics.add.group();
 
@@ -372,17 +386,30 @@ export default {
             },
           )
           .setOrigin(0.5)
-          .setDepth(1001);
-
-        // Invisible overlay placeholder (kept for cleanup in updateCountdown)
-        this.countdownBg = this.add
-          .rectangle(0, 0, 0, 0, 0x000000, 0)
-          .setDepth(999);
+          .setDepth(1001)
+          .setScale(2.2);
+        // Initial pop-in for "3"
+        this.tweens.add({
+          targets: this.countdownText,
+          scaleX: 1,
+          scaleY: 1,
+          duration: 380,
+          ease: "Back.easeOut",
+        });
 
         this.updateCountdown = function () {
           this.countdownNumber--;
           if (this.countdownNumber > 0) {
             this.countdownText.setText(this.countdownNumber);
+            // Scale-pop the number
+            this.countdownText.setScale(2.2);
+            this.tweens.add({
+              targets: this.countdownText,
+              scaleX: 1,
+              scaleY: 1,
+              duration: 380,
+              ease: "Back.easeOut",
+            });
           } else {
             this.countdownText.setText("");
             this.tweens.add({
@@ -505,13 +532,66 @@ export default {
         );
         if (newDelay !== this.spawnDelay) {
           this.spawnDelay = newDelay;
-          // Restart spawn timer with new delay
           if (this.spawnEvent) this.spawnEvent.remove();
           this.spawnEvent = this.time.addEvent({
             delay: this.spawnDelay,
             callback: spawnItem,
             callbackScope: this,
             loop: true,
+          });
+        }
+
+        // Speed warning at 66% through game
+        if (!this.speedWarningShown && progress >= 0.66) {
+          this.speedWarningShown = true;
+          const warningText = this.add
+            .text(
+              this.cameras.main.centerX,
+              this.cameras.main.centerY,
+              "SPEED UP!",
+              {
+                fontFamily: "Arial",
+                fontSize: "90px",
+                fontStyle: "bold",
+                color: "#FFFFFF",
+                stroke: "#8b0000",
+                strokeThickness: 8,
+              },
+            )
+            .setOrigin(0.5)
+            .setDepth(300)
+            .setAlpha(0)
+            .setScale(0.5);
+
+          this.tweens.add({
+            targets: warningText,
+            alpha: 1,
+            scaleX: 1,
+            scaleY: 1,
+            duration: 200,
+            ease: "Back.easeOut",
+            onComplete: () => {
+              this.tweens.add({
+                targets: warningText,
+                alpha: 0,
+                y: warningText.y - 80,
+                duration: 700,
+                delay: 600,
+                ease: "Power2",
+                onComplete: () => warningText.destroy(),
+              });
+            },
+          });
+
+          // Red edge flash for speed warning
+          this.edgeFlash.setFillStyle(0xff0000);
+          this.tweens.add({
+            targets: this.edgeFlash,
+            alpha: 0.22,
+            duration: 150,
+            yoyo: true,
+            repeat: 2,
+            onComplete: () => this.edgeFlash.setAlpha(0),
           });
         }
 
@@ -567,48 +647,146 @@ export default {
         const points = item.getData("points");
         const objectType = item.getData("type");
         const objectKey = item.texture.key;
+        const catchX = item.x;
+        const catchY = item.y;
+        const itemScale = item.getData("itemScale") || 0.45;
 
         if (points !== undefined && points !== null) {
           score += points;
-          // Prevent overall score from going below 0
           score = Math.max(0, score);
 
-          if (objectKey === "apple") {
-            appleScore += points;
-          } else if (objectKey === "banana") {
-            bananaScore += points;
-          } else if (objectKey === "carrot") {
-            carrotScore += points;
-          }
+          if (objectKey === "apple") appleScore += points;
+          else if (objectKey === "banana") bananaScore += points;
+          else if (objectKey === "carrot") carrotScore += points;
 
-          this.scoreText.setText(score);
+          // ── Animated score counter ──
+          const targetScore = score;
+          const startScore = this.displayedScore;
+          const diff = targetScore - startScore;
+          const steps = 12;
+          let step = 0;
+          const scoreTimer = this.time.addEvent({
+            delay: 25,
+            repeat: steps - 1,
+            callback: () => {
+              step++;
+              const displayed = Math.round(startScore + diff * (step / steps));
+              this.scoreText.setText(displayed.toLocaleString());
+              if (step >= steps) {
+                this.displayedScore = targetScore;
+                scoreTimer.remove();
+              }
+            },
+          });
 
           if (objectType === "negative") {
             this.wrongSound.play();
+
+            // ── Bad bubble: red splat flash + shake ──
+            this.edgeFlash.setFillStyle(0xff0000);
+            this.tweens.add({
+              targets: this.edgeFlash,
+              alpha: 0.30,
+              duration: 80,
+              yoyo: true,
+              repeat: 1,
+              onComplete: () => this.edgeFlash.setAlpha(0),
+            });
+
+            // Splat: scale up & fade red tint
+            item.setTintFill(0xff3333);
+            this.tweens.add({
+              targets: item,
+              scaleX: itemScale * 1.8,
+              scaleY: itemScale * 0.5,
+              alpha: 0,
+              duration: 280,
+              ease: "Power2",
+              onComplete: () => item.destroy(),
+            });
+
           } else {
             this.collectSound.play();
+
+            // ── Good bubble: pop ring + scale-out ──
+            // Pop ring
+            const ring = this.add
+              .circle(catchX, catchY, 10, 0xffffff, 0.7)
+              .setDepth(105)
+              .setStrokeStyle(3, 0xffffff, 0.9);
+            this.tweens.add({
+              targets: ring,
+              scaleX: 5,
+              scaleY: 5,
+              alpha: 0,
+              duration: 380,
+              ease: "Power2",
+              onComplete: () => ring.destroy(),
+            });
+
+            // Bubble scale-up & pop
+            this.tweens.add({
+              targets: item,
+              scaleX: itemScale * 1.4,
+              scaleY: itemScale * 1.4,
+              alpha: 0,
+              duration: 200,
+              ease: "Power2",
+              onComplete: () => item.destroy(),
+            });
+
+            // White edge glow
+            this.edgeFlash.setFillStyle(0xffffff);
+            this.tweens.add({
+              targets: this.edgeFlash,
+              alpha: 0.18,
+              duration: 80,
+              yoyo: true,
+              onComplete: () => this.edgeFlash.setAlpha(0),
+            });
           }
 
-          const scoreText = points > 0 ? `+${points}` : `${points}`;
-          const scoreColor = points > 0 ? "#7B0000" : "#7B0000";
+          // ── Bowl catch ripple ──
+          const bowlWorldX = this.bowlContainer.x;
+          const bowlWorldY = this.bowlContainer.y;
+          const ripple = this.add
+            .ellipse(bowlWorldX, bowlWorldY - 10, 60, 20, 0xffffff, 0.5)
+            .setDepth(104);
+          this.tweens.add({
+            targets: ripple,
+            scaleX: 3,
+            scaleY: 2.5,
+            alpha: 0,
+            duration: 340,
+            ease: "Power2",
+            onComplete: () => ripple.destroy(),
+          });
+
+          // ── Score popup ──
+          const scoreText = points > 0 ? `+${points.toLocaleString()}` : `${points.toLocaleString()}`;
           const scorePopup = this.add
-            .text(item.x, item.y, scoreText, {
+            .text(catchX, catchY - 20, scoreText, {
               fontFamily: "Arial",
-              fontSize: "20px",
-              color: scoreColor,
-              fontStyle: "normal",
+              fontSize: "36px",
+              fontStyle: "bold",
+              color: points > 0 ? "#ffffff" : "#ff4444",
+              stroke: "#8b0000",
+              strokeThickness: 4,
             })
             .setOrigin(0.5)
-            .setDepth(102);
+            .setDepth(106);
           this.tweens.add({
             targets: scorePopup,
             alpha: 0,
-            y: item.y - 80,
-            duration: 800,
-            ease: "Power1",
+            y: catchY - 130,
+            scaleX: 1.3,
+            scaleY: 1.3,
+            duration: 900,
+            ease: "Power2",
             onComplete: () => scorePopup.destroy(),
           });
 
+          // ── Bowl bounce ──
           const bowlBaseScale = 0.4;
           this.tweens.add({
             targets: this.bowl,
@@ -627,10 +805,9 @@ export default {
 
           item.setVisible(false);
           item.body.enable = false;
+          // item already handled by tweens above — destroy called inside onComplete
+          // (disable physics body immediately to prevent double-catch)
 
-          this.time.delayedCall(400, () => {
-            item.destroy();
-          });
         } else {
           item.destroy();
         }
