@@ -117,7 +117,7 @@ const DEFAULT_CONFIG = {
   appleScore: 1000,
   bananaScore: 1000,
   carrotScore: 1000,
-  objectScale: 0.9,
+  objectScale: 0.45,
   negativeScore: -1000,
   winScore: 24000,
   gameTimer: 30,

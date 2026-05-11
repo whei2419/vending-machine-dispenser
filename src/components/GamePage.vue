@@ -73,6 +73,11 @@ export default {
             cfg.carrotScore = 1000;
             migrated = true;
           }
+          // Fix objectScale that was incorrectly set to 0.9
+          if (!cfg.objectScale || cfg.objectScale >= 0.8) {
+            cfg.objectScale = 0.45;
+            migrated = true;
+          }
           if (migrated) localStorage.setItem("gameConfig", JSON.stringify(cfg));
           return cfg;
         } catch (e) {
