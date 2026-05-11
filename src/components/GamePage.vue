@@ -62,15 +62,15 @@ export default {
           const cfg = JSON.parse(savedConfig);
           let migrated = false;
           if (cfg.appleScore === 1) {
-            cfg.appleScore = 10;
+            cfg.appleScore = 1000;
             migrated = true;
           }
           if (cfg.bananaScore === 1) {
-            cfg.bananaScore = 10;
+            cfg.bananaScore = 1000;
             migrated = true;
           }
           if (cfg.carrotScore === 1) {
-            cfg.carrotScore = 10;
+            cfg.carrotScore = 1000;
             migrated = true;
           }
           if (migrated) localStorage.setItem("gameConfig", JSON.stringify(cfg));
@@ -80,9 +80,9 @@ export default {
         }
       }
       return {
-        appleScore: 10,
-        bananaScore: 10,
-        carrotScore: 10,
+        appleScore: 1000,
+        bananaScore: 1000,
+        carrotScore: 1000,
         // egg and milk removed
         objectScale: 0.45,
         negativeScore: -1,
@@ -168,7 +168,6 @@ export default {
             path: badBubbleImg,
             type: "negative",
             points: gameConfig.negativeScore,
-            label: "Peptide Water",
           },
         ];
 
@@ -281,15 +280,13 @@ export default {
             this.cameras.main.height / this.timerContainerBg.height,
           ) * 0.3,
         );
-        this.physics.add.existing(this.timerContainerBg, true);
 
         this.timerText = this.add
-          .text(255, 80, "00:30", {
+          .text(200, 95, "00:30", {
             fontFamily: "Arial",
-            fontSize: "44px",
+            fontSize: "47px",
             color: "#8B1A1A",
-            align: "center",
-            fontStyle: "bold",
+            fontStyle: "normal",
           })
           .setOrigin(0.5)
           .setDepth(100);
@@ -304,15 +301,13 @@ export default {
             this.cameras.main.height / this.scoreContainerBg.height,
           ) * 0.27,
         );
-        this.physics.add.existing(this.scoreContainerBg, true);
 
         this.scoreText = this.add
-          .text(this.cameras.main.width - 85, 80, "0", {
+          .text(this.cameras.main.width - 150, 95, "0", {
             fontFamily: "Arial",
-            fontSize: "44px",
+            fontSize: "47px",
             color: "#8B1A1A",
-            align: "center",
-            fontStyle: "bold",
+            fontStyle: "normal",
           })
           .setOrigin(0.5)
           .setDepth(100);
@@ -329,7 +324,7 @@ export default {
               fontFamily: "Arial, sans-serif",
               fontSize: "64px",
               color: "#FFFFFF",
-              fontStyle: "bold",
+              fontStyle: "normal",
             },
           )
           .setOrigin(0.5)
@@ -492,7 +487,7 @@ export default {
           const labelText = this.add
             .text(randomX, -50, randomItem.label, {
               fontFamily: "Arial",
-              fontSize: "22px",
+              fontSize: "14px",
               color: "#7B0000",
               fontStyle: "bold",
               align: "center",
@@ -508,6 +503,31 @@ export default {
         if (this.isGameOver) return;
 
         timer--;
+
+        // Scale speed linearly: faster as time runs out
+        const totalTime = gameConfig.gameTimer;
+        const elapsed = totalTime - timer;
+        const progress = Math.min(elapsed / totalTime, 1); // 0 → 1 over game duration
+
+        this.dropGravity = Math.round(
+          gameConfig.initialGravity + (gameConfig.maxGravity - gameConfig.initialGravity) * progress
+        );
+
+        const newDelay = Math.round(
+          gameConfig.initialSpawnDelay - (gameConfig.initialSpawnDelay - gameConfig.minSpawnDelay) * progress
+        );
+        if (newDelay !== this.spawnDelay) {
+          this.spawnDelay = newDelay;
+          // Restart spawn timer with new delay
+          if (this.spawnEvent) this.spawnEvent.remove();
+          this.spawnEvent = this.time.addEvent({
+            delay: this.spawnDelay,
+            callback: spawnItem,
+            callbackScope: this,
+            loop: true,
+          });
+        }
+
         if (timer >= 0) {
           const minutes = Math.floor(timer / 60);
           const seconds = timer % 60;
@@ -582,20 +602,10 @@ export default {
             this.collectSound.play();
           }
 
-          const splashX = item.x;
-          const splashY = item.y;
-
-          const milkSplash = this.add
-            .image(splashX, splashY, "milkSplash")
-            .setOrigin(0.5)
-            .setDepth(101)
-            .setScale(0.2);
-
           const scoreText = points > 0 ? `+${points}` : `${points}`;
           const scoreColor = points > 0 ? "#063591" : "#FF0000";
-
           const scorePopup = this.add
-            .text(splashX, splashY, scoreText, {
+            .text(item.x, item.y, scoreText, {
               fontFamily: "Arial",
               fontSize: "40px",
               color: scoreColor,
@@ -603,16 +613,13 @@ export default {
             })
             .setOrigin(0.5)
             .setDepth(102);
-
           this.tweens.add({
-            targets: [milkSplash, scorePopup],
+            targets: scorePopup,
             alpha: 0,
+            y: item.y - 80,
             duration: 800,
             ease: "Power1",
-            onComplete: () => {
-              milkSplash.destroy();
-              scorePopup.destroy();
-            },
+            onComplete: () => scorePopup.destroy(),
           });
 
           this.tweens.add({
