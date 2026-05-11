@@ -79,7 +79,6 @@ export default {
     onMounted(() => {
       const lang = route.query.lang;
       if (lang) selectedLang.value = lang;
-
       score.value = route.query.score || 0;
     });
 
