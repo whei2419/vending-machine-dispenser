@@ -15,15 +15,8 @@
       "
     /> -->
     <div class="buttoncontainer">
-      <button
-        id="startButton"
-        type="button"
-        class="start-button"
-        :class="{ loading: isLoading }"
-        @mouseover="handleInteraction"
-        @mouseout="handleMouseOut"
-        @click="handleInteraction"
-      >
+      <button id="startButton" type="button" class="start-button" :class="{ loading: isLoading }"
+        @mouseover="handleInteraction" @mouseout="handleMouseOut" @click="handleInteraction">
         {{ buttonText }}
       </button>
     </div>
@@ -34,8 +27,8 @@
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useFullscreen } from "@/composables/useFullscreen";
-import bgEnglish from "@/assets/dutch/special.webp";
-import logoImg from "@/assets/dutch/logo.webp";
+import bgEnglish from "@/assets/images/plain.webp";
+import logoImg from "@/assets/images/001_Logo.webp";
 import selectSoundFile from "@/assets/audio/select-sound.mp3";
 import completeSoundFile from "@/assets/audio/completed.mp3";
 
@@ -50,7 +43,7 @@ export default {
     let hoverTimer = null;
 
     const buttonText = computed(() => {
-      return selectedLang.value === "chinese" ? "开始" : "SELESAI";
+      return "FINISH";
     });
 
     const backgroundStyle = computed(() => {
@@ -117,35 +110,7 @@ export default {
 }
 
 .start-button {
-  background-color: $primary-color;
-  color: $white;
-  border: 10px solid $primary-color;
-  font-size: 48px;
-  cursor: pointer;
-  width: 400px;
-  height: 110px;
-  border-radius: 70px;
-  position: relative;
-  @include flex-center;
-
-  &.loading::after {
-    content: "";
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    right: 20px;
-    top: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spinner 0.6s linear infinite;
-  }
-}
-
-@keyframes spinner {
-  to {
-    transform: rotate(360deg);
-  }
+  @include bubble-button;
 }
 
 .buttoncontainer {

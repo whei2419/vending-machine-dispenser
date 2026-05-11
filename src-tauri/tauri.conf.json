@@ -16,7 +16,7 @@
         "width": 1080,
         "height": 1920,
         "fullscreen": false,
-        "resizable": false,
+        "resizable": true,
         "decorations": true,
         "center": true,
         "alwaysOnTop": false
@@ -28,7 +28,10 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["msi", "nsis"],
+    "targets": [
+      "msi",
+      "nsis"
+    ],
     "publisher": "Vending Machine",
     "copyright": "Copyright © 2026",
     "category": "Game",
@@ -43,7 +46,9 @@
     ],
     "windows": {
       "wix": {
-        "language": ["en-US"]
+        "language": [
+          "en-US"
+        ]
       },
       "nsis": {
         "installerIcon": "icons/icon.ico",

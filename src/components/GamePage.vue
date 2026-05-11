@@ -1,19 +1,16 @@
 <template>
   <div class="page-game">
-    <div
-      id="preloadBackground"
-      :style="{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        backgroundImage: `url(${mainBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        zIndex: 0,
-      }"
-    ></div>
+    <div id="preloadBackground" :style="{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      backgroundImage: `url(${mainBg})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      zIndex: 0,
+    }"></div>
     <!-- config button moved to StartPage (top-left) -->
     <div id="gameContainer" style="position: relative; z-index: 1"></div>
   </div>
@@ -24,7 +21,7 @@ import { onMounted, onUnmounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useFullscreen } from "@/composables/useFullscreen";
 import Phaser from "phaser";
-import mainBg from "@/assets/dutch/mainBackground.webp";
+import mainBg from "@/assets/images/plain.webp";
 
 // Import all game assets
 import collectSoundFile from "@/assets/audio/collect bird nest.mp3";
@@ -34,17 +31,17 @@ import bgSoundFile from "@/assets/audio/bg.mp3";
 import buzzerSoundFile from "@/assets/audio/long-buzzer.mp3";
 import wrongSoundFile from "@/assets/audio/wrong item.mp3";
 
-import magnifyImg from "@/assets/dutch/fallingObjects/normal/magnify.webp";
-import octagonImg from "@/assets/dutch/fallingObjects/normal/octagon.webp";
-import worldImg from "@/assets/dutch/fallingObjects/normal/world.webp";
+import goodBubble1Img from "@/assets/images/fallingObjects/003_Good Bubble 01.webp";
+import goodBubble2Img from "@/assets/images/fallingObjects/003_Good Bubble 02.webp";
+import goodBubble3Img from "@/assets/images/fallingObjects/003_Good Bubble 03.webp";
+import badBubbleImg from "@/assets/images/fallingObjects/003_Bad Bubble.webp";
 
 import explosionImg from "@/assets/images/exp.png";
 import countdownImg from "@/assets/images/countdown.webp";
 import countdownReadyImg from "@/assets/dutch/countdown_reaady.webp";
-import bowlImg from "@/assets/dutch/bowl.webp";
-import logoImg from "@/assets/dutch/logo.webp";
-import timerImg from "@/assets/dutch/timer.webp";
-import totalScoreImg from "@/assets/dutch/totalscore.webp";
+import bowlImg from "@/assets/images/003_Product.webp";
+import timerImg from "@/assets/images/001_Time.webp";
+import totalScoreImg from "@/assets/images/001_Total.webp";
 import milkSplashImg from "@/assets/dutch/milk splash.png";
 
 export default {
@@ -87,7 +84,7 @@ export default {
         bananaScore: 10,
         carrotScore: 10,
         // egg and milk removed
-        objectScale: 0.9,
+        objectScale: 0.45,
         negativeScore: -1,
         winScore: 20,
         gameTimer: 30,
@@ -147,21 +144,31 @@ export default {
         this.fallingObjects = [
           {
             key: "apple",
-            path: magnifyImg,
+            path: goodBubble1Img,
             type: "normal",
             points: gameConfig.appleScore,
+            label: "Micro-firming\nCapsules",
           },
           {
             key: "banana",
-            path: octagonImg,
+            path: goodBubble2Img,
             type: "normal",
             points: gameConfig.bananaScore,
+            label: "Collagen-rich\nSerum",
           },
           {
             key: "carrot",
-            path: worldImg,
+            path: goodBubble3Img,
             type: "normal",
             points: gameConfig.carrotScore,
+            label: "Peony Extracts",
+          },
+          {
+            key: "badBubble",
+            path: badBubbleImg,
+            type: "negative",
+            points: gameConfig.negativeScore,
+            label: "Peptide Water",
           },
         ];
 
@@ -176,7 +183,6 @@ export default {
         this.load.image("countdown", countdownImg);
         this.load.image("countdownReady", countdownReadyImg);
         this.load.image("bowl", bowlImg);
-        this.load.image("logo", logoImg);
         this.load.image("timerContainerBg", timerImg);
         this.load.image("scoreContainerBg", totalScoreImg);
         this.load.image("milkSplash", milkSplashImg);
@@ -231,9 +237,6 @@ export default {
           ),
         );
 
-        this.logo = this.add.image(30, 30, "logo").setOrigin(0, 0);
-        this.logo.setScale(0.28);
-        this.logo.setDepth(98);
 
         this.bowl = this.add.sprite(0, -40, "bowl").setOrigin(0.5);
         this.bowl.setScale(0.4);
@@ -269,7 +272,7 @@ export default {
         this.items = this.physics.add.group();
 
         this.timerContainerBg = this.add
-          .image(this.cameras.main.width - 500, 100, "timerContainerBg")
+          .image(170, 80, "timerContainerBg")
           .setOrigin(0.5)
           .setDepth(99);
         this.timerContainerBg.setScale(
@@ -281,10 +284,10 @@ export default {
         this.physics.add.existing(this.timerContainerBg, true);
 
         this.timerText = this.add
-          .text(this.cameras.main.width - 490, 117, "00:30", {
-            fontFamily: "HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec",
-            fontSize: "40px",
-            color: "#FFFFFF",
+          .text(255, 80, "00:30", {
+            fontFamily: "Arial",
+            fontSize: "44px",
+            color: "#8B1A1A",
             align: "center",
             fontStyle: "bold",
           })
@@ -292,7 +295,7 @@ export default {
           .setDepth(100);
 
         this.scoreContainerBg = this.add
-          .image(this.cameras.main.width - 170, 100, "scoreContainerBg")
+          .image(this.cameras.main.width - 170, 80, "scoreContainerBg")
           .setOrigin(0.5)
           .setDepth(99);
         this.scoreContainerBg.setScale(
@@ -304,10 +307,10 @@ export default {
         this.physics.add.existing(this.scoreContainerBg, true);
 
         this.scoreText = this.add
-          .text(this.cameras.main.width - 165, 117, "0", {
-            fontFamily: "HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec",
-            fontSize: "40px",
-            color: "#FFFFFF",
+          .text(this.cameras.main.width - 85, 80, "0", {
+            fontFamily: "Arial",
+            fontSize: "44px",
+            color: "#8B1A1A",
             align: "center",
             fontStyle: "bold",
           })
@@ -315,69 +318,64 @@ export default {
           .setDepth(100);
 
         this.countdownNumber = 3;
-        this.countdownOverlay = this.add
-          .rectangle(
-            this.cameras.main.centerX,
-            this.cameras.main.centerY,
-            this.cameras.main.width,
-            this.cameras.main.height,
-            0x000000,
-            0.3,
-          )
-          .setDepth(999)
-          .setAlpha(0);
-        this.tweens.add({
-          targets: this.countdownOverlay,
-          alpha: 1,
-          duration: 500,
-          ease: "Quad.easeIn",
-        });
 
+        // "GET READY!" label
         this.countdownReadyImage = this.add
-          .image(
+          .text(
             this.cameras.main.centerX,
-            this.cameras.main.centerY - 400,
-            "countdownReady",
+            this.cameras.main.centerY - 120,
+            "GET READY!",
+            {
+              fontFamily: "Arial, sans-serif",
+              fontSize: "64px",
+              color: "#FFFFFF",
+              fontStyle: "bold",
+            },
           )
           .setOrigin(0.5)
           .setDepth(1002)
-          .setAlpha(0)
-          .setScale(0.5);
+          .setAlpha(0);
         this.tweens.add({
           targets: this.countdownReadyImage,
           alpha: 1,
-          scale: 0.5,
-          duration: 500,
-          ease: "Back.Out",
+          duration: 400,
+          ease: "Quad.easeIn",
         });
 
-        this.countdownBg = this.add
-          .image(
+        // Large countdown number
+        this.countdownText = this.add
+          .text(
             this.cameras.main.centerX,
-            this.cameras.main.centerY,
-            "countdown",
+            this.cameras.main.centerY + 20,
+            "3",
+            {
+              fontFamily: "Arial, sans-serif",
+              fontSize: "220px",
+              color: "#FFFFFF",
+              fontStyle: "bold",
+            },
           )
           .setOrigin(0.5)
-          .setDepth(1000)
-          .setDisplaySize(130, 85)
-          .setAlpha(0.95)
-          .setScale(0.5);
-        this.tweens.add({
-          targets: this.countdownBg,
-          scale: 0.55,
-          duration: 400,
-          ease: "Back.Out",
-        });
-
-        this.countdownText = this.add
-          .text(this.cameras.main.centerX, this.cameras.main.centerY, "3", {
-            fontFamily: "HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec",
-            fontSize: "250px",
-            color: "#F37021",
-            fontStyle: "bold",
-          })
-          .setOrigin(0.5)
           .setDepth(1001);
+
+        // Blue underline bar beneath the number
+        this.countdownUnderline = this.add
+          .rectangle(
+            this.cameras.main.centerX,
+            this.cameras.main.centerY + 145,
+            140,
+            7,
+            0x4fc3f7,
+          )
+          .setDepth(1001);
+
+        // Invisible overlay placeholder (kept for cleanup in updateCountdown)
+        this.countdownOverlay = this.add
+          .rectangle(0, 0, 0, 0, 0x000000, 0)
+          .setDepth(999);
+        this.countdownBg = this.add
+          .rectangle(0, 0, 0, 0, 0x000000, 0)
+          .setDepth(999);
 
         this.updateCountdown = function () {
           this.countdownNumber--;
@@ -390,6 +388,8 @@ export default {
                 this.countdownOverlay,
                 this.countdownBg,
                 this.countdownReadyImage,
+                this.countdownText,
+                this.countdownUnderline,
               ],
               alpha: 0,
               duration: 100,
@@ -397,6 +397,8 @@ export default {
                 this.countdownOverlay.setVisible(false);
                 this.countdownBg.setVisible(false);
                 this.countdownReadyImage.setVisible(false);
+                this.countdownText.setVisible(false);
+                this.countdownUnderline.setVisible(false);
               },
             });
             this.countdownEvent.remove();
@@ -453,7 +455,19 @@ export default {
         });
       }
 
-      function update() {}
+      function update() {
+        // Move labels with their bubbles; clean up if off-screen
+        this.items.getChildren().forEach((item) => {
+          const labelText = item.getData("labelText");
+          if (labelText) {
+            labelText.setPosition(item.x, item.y);
+            if (item.y > this.cameras.main.height + 150) {
+              labelText.destroy();
+              item.setData("labelText", null);
+            }
+          }
+        });
+      }
 
       function spawnItem() {
         if (this.isGameOver) return;
@@ -466,13 +480,28 @@ export default {
         item.setData("type", randomItem.type);
 
         item.setOrigin(0.5);
-        // Increase falling object visual size (from config)
         item.setScale(gameConfig.objectScale || 0.9);
 
         item.body.setAllowGravity(true);
         item.body.gravity.y = this.dropGravity;
         item.body.velocity.x = Phaser.Math.Between(-30, 30);
         item.setData("outOfBoundsKill", true);
+
+        // Add label text on bubble
+        if (randomItem.label) {
+          const labelText = this.add
+            .text(randomX, -50, randomItem.label, {
+              fontFamily: "Arial",
+              fontSize: "22px",
+              color: "#7B0000",
+              fontStyle: "bold",
+              align: "center",
+              wordWrap: { width: 160 },
+            })
+            .setOrigin(0.5)
+            .setDepth(10);
+          item.setData("labelText", labelText);
+        }
       }
 
       function updateTimer() {
@@ -567,7 +596,7 @@ export default {
 
           const scorePopup = this.add
             .text(splashX, splashY, scoreText, {
-              fontFamily: "HvDTrial_Brevia-ExtraBlack-BF6493a4064f0ec",
+              fontFamily: "Arial",
               fontSize: "40px",
               color: scoreColor,
               fontStyle: "bold",
@@ -600,6 +629,13 @@ export default {
           item.setVisible(false);
           item.body.enable = false;
 
+          // Destroy label when caught
+          const labelText = item.getData("labelText");
+          if (labelText) {
+            labelText.destroy();
+            item.setData("labelText", null);
+          }
+
           this.time.delayedCall(400, () => {
             item.destroy();
           });
@@ -611,7 +647,8 @@ export default {
       game = new Phaser.Game(config);
     };
 
-    onMounted(() => {
+    onMounted(async () => {
+      await document.fonts.load("bold 64px Arial");
       initGame();
     });
 

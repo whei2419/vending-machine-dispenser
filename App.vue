@@ -5,8 +5,13 @@
 </template>
 
 <script>
+import { useFullscreen } from "./src/composables/useFullscreen";
+
 export default {
   name: "App",
+  setup() {
+    useFullscreen();
+  },
 };
 </script>
 

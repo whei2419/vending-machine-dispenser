@@ -1,37 +1,19 @@
 <template>
   <div class="page-tryagain" :style="backgroundStyle">
-    <img
-      :src="logoSrc"
-      alt="Logo"
-      style="
-        position: absolute;
-        top: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 1000;
-        max-width: 273px;
-      "
-    />
-    <div class="score">
-      <p id="score">{{ score }}</p>
-    </div>
+    <img :src="logoSrc" alt="Logo" class="logo" />
 
-    <div class="individual-scores">
-      <span id="magnifyScore">{{ apple }}</span>
-      <span id="octagonScore">{{ banana }}</span>
-      <span id="worldScore">{{ carrot }}</span>
+    <h1 class="title">BETTER LUCK<br>NEXT TIME!</h1>
+
+    <div class="score-card">
+      <p class="you-won">YOUR SCORE</p>
+      <p class="score-number">{{ Number(score).toLocaleString() }}</p>
+      <p class="score-label">your score</p>
+      <p class="score-message">Give it another shot and catch more bubbles!</p>
     </div>
 
     <div class="buttoncontainer">
-      <button
-        id="tryAgainButton"
-        type="button"
-        class="tryagain-button"
-        :class="{ loading: isLoading }"
-        @mouseover="handleInteraction"
-        @mouseout="handleMouseOut"
-        @click="handleInteraction"
-      >
+      <button type="button" class="tryagain-button" :class="{ loading: isLoading }" @mouseover="handleInteraction"
+        @mouseout="handleMouseOut" @click="handleInteraction">
         {{ buttonText }}
       </button>
     </div>
@@ -42,8 +24,8 @@
 import { ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useFullscreen } from "@/composables/useFullscreen";
-import bgEnglish from "@/assets/dutch/tryagain.webp";
-import logoImg from "@/assets/dutch/logo.webp";
+import bgEnglish from "@/assets/images/plain.webp";
+import logoImg from "@/assets/images/001_Logo.webp";
 import selectSoundFile from "@/assets/audio/select-sound.mp3";
 import completeSoundFile from "@/assets/audio/completed.mp3";
 
@@ -56,13 +38,10 @@ export default {
     const selectedLang = ref("english");
     const isLoading = ref(false);
     const score = ref(0);
-    const apple = ref(0);
-    const banana = ref(0);
-    const carrot = ref(0);
     let hoverTimer = null;
 
     const buttonText = computed(() => {
-      return "CUBA LAGI";
+      return "TRY AGAIN";
     });
 
     const backgroundStyle = computed(() => {
@@ -101,9 +80,6 @@ export default {
       if (lang) selectedLang.value = lang;
 
       score.value = route.query.score || 0;
-      apple.value = route.query.apple || 0;
-      banana.value = route.query.banana || 0;
-      carrot.value = route.query.carrot || 0;
     });
 
     return {
@@ -112,9 +88,6 @@ export default {
       backgroundStyle,
       logoSrc,
       score,
-      apple,
-      banana,
-      carrot,
       handleInteraction,
       handleMouseOut,
     };
@@ -127,85 +100,76 @@ export default {
   @include fullscreen;
   @include background-cover;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 32px 60px;
+  box-sizing: border-box;
+}
+
+.logo {
+  width: 220px;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 38px;
+  color: #8b0000;
+  font-weight: 900;
+  margin: 0 0 32px;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.score-card {
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 28px;
+  padding: 44px 52px;
+  text-align: center;
+  width: 360px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.you-won {
+  font-size: 26px;
+  color: #8b0000;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.score-number {
+  font-size: 80px;
+  color: #8b0000;
+  font-weight: 900;
+  margin: 0 0 4px;
+  line-height: 1;
+}
+
+.score-label {
+  font-size: 18px;
+  color: #8b0000;
+  font-weight: 400;
+  text-transform: lowercase;
+  margin: 0 0 24px;
+}
+
+.score-message {
+  font-size: 14px;
+  color: #8b0000;
+  font-weight: 400;
+  text-transform: none;
+  margin: 0;
+  line-height: 1.6;
 }
 
 .tryagain-button {
-  background-color: $primary-color;
-  color: $white;
-  border: 10px solid $primary-color;
-  font-size: 48px;
-  cursor: pointer;
-  width: 420px;
-  height: 110px;
-  border-radius: 70px;
-  position: relative;
-  @include flex-center;
-
-  &.loading::after {
-    content: "";
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    right: 25px;
-    top: 25px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spinner 0.6s linear infinite;
-  }
-}
-
-@keyframes spinner {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.score {
-  font-size: 120px;
-  color: $primary-color;
-  position: absolute;
-  bottom: 444px;
-  left: 50%;
-  transform: translateX(-50%);
+  @include bubble-button;
 }
 
 .buttoncontainer {
-  position: absolute;
-  bottom: 17%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-#score {
-  font-size: 84px;
-  color: $primary-color;
-  padding: 0;
-  margin: 0;
-  line-height: 117px;
-}
-
-.individual-scores span {
-  font-size: 50px;
-  color: #114a9f;
-  position: absolute;
-  z-index: 99;
-  display: block;
-  text-align: left;
-}
-
-#magnifyScore {
-  top: 437px;
-  left: 195px;
-}
-
-#octagonScore {
-  top: 437px;
-  left: 514px;
-}
-
-#worldScore {
-  top: 437px;
-  left: 825px;
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
 }
 </style>

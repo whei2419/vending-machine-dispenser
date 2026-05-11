@@ -1,11 +1,14 @@
 <template>
-  <div class="page-dispenser" :style="backgroundStyle">
-    <button
-      class="config-button"
-      @click="goToConfig"
-      title="Settings"
-      aria-label="Settings"
-    >
+  <div class="page-dispenser" :style="backgroundStyle" @mousemove="resetIdleTimer" @mousedown="resetIdleTimer"
+    @touchstart="resetIdleTimer" @keydown="resetIdleTimer">
+    <!-- Idle video overlay -->
+    <Transition name="idle-fade">
+      <div v-if="isIdle" class="idle-overlay" @click="resetIdleTimer" @touchstart="resetIdleTimer">
+        <video ref="idleVideo" class="idle-video" src="@/assets/video/idlevideo.mp4" autoplay loop playsinline />
+      </div>
+    </Transition>
+
+    <button class="config-button" @click="goToConfig" title="Settings" aria-label="Settings">
       <i class="fa-solid fa-gear"></i>
     </button>
     <!-- <img
@@ -23,15 +26,8 @@
       "
     /> -->
     <div class="buttoncontainer">
-      <button
-        id="startButton"
-        type="button"
-        class="start-button"
-        :class="{ loading: isLoading }"
-        @mouseover="handleInteraction"
-        @mouseout="handleMouseOut"
-        @click="handleInteraction"
-      >
+      <button id="startButton" type="button" class="start-button" :class="{ loading: isLoading }"
+        @mouseover="handleInteraction" @mouseout="handleMouseOut" @click="handleInteraction">
         {{ buttonText }}
       </button>
     </div>
@@ -39,13 +35,15 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useFullscreen } from "@/composables/useFullscreen";
-import bgEnglish from "@/assets/dutch/start.webp";
-import logoImg from "@/assets/dutch/logo.webp";
+import bgEnglish from "@/assets/images/startPage.webp";
+import logoImg from "@/assets/images/001_Logo.webp";
 import selectSoundFile from "@/assets/audio/select-sound.mp3";
 import completeSoundFile from "@/assets/audio/completed.mp3";
+
+const IDLE_TIMEOUT_MS = 5000;
 
 export default {
   name: "StartPage",
@@ -55,10 +53,27 @@ export default {
     useFullscreen();
     const selectedLang = ref("english");
     const isLoading = ref(false);
+    const isIdle = ref(false);
+    const idleVideo = ref(null);
     let hoverTimer = null;
+    let idleTimer = null;
+
+    const startIdleTimer = () => {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        isIdle.value = true;
+      }, IDLE_TIMEOUT_MS);
+    };
+
+    const resetIdleTimer = () => {
+      if (isIdle.value) {
+        isIdle.value = false;
+      }
+      startIdleTimer();
+    };
 
     const buttonText = computed(() => {
-      return selectedLang.value === "chinese" ? "开始" : "MULA!";
+      return selectedLang.value === "chinese" ? "开始" : "START";
     });
 
     const backgroundStyle = computed(() => {
@@ -100,22 +115,58 @@ export default {
       if (lang === "chinese") {
         selectedLang.value = "chinese";
       }
+      startIdleTimer();
+    });
+
+    onUnmounted(() => {
+      clearTimeout(idleTimer);
+      clearTimeout(hoverTimer);
     });
 
     return {
       isLoading,
+      isIdle,
+      idleVideo,
       buttonText,
       backgroundStyle,
       logoSrc,
       handleInteraction,
       handleMouseOut,
       goToConfig,
+      resetIdleTimer,
     };
   },
 };
 </script>
 
 <style scoped lang="scss">
+.idle-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.idle-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.idle-fade-enter-active,
+.idle-fade-leave-active {
+  transition: opacity 0.6s ease;
+}
+
+.idle-fade-enter-from,
+.idle-fade-leave-to {
+  opacity: 0;
+}
+
 .page-dispenser {
   @include fullscreen;
   @include background-cover;
@@ -125,40 +176,12 @@ export default {
 }
 
 .start-button {
-  background-color: $primary-color;
-  color: $white;
-  border: 10px solid $primary-color;
-  font-size: 48px;
-  cursor: pointer;
-  width: 400px;
-  height: 110px;
-  border-radius: 70px;
-  position: relative;
-  @include flex-center;
-
-  &.loading::after {
-    content: "";
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    right: 20px;
-    top: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    border-top-color: white;
-    animation: spinner 0.6s linear infinite;
-  }
-}
-
-@keyframes spinner {
-  to {
-    transform: rotate(360deg);
-  }
+  @include bubble-button;
 }
 
 .buttoncontainer {
   position: absolute;
-  bottom: 44%;
+  bottom: 10%;
   left: 50%;
   transform: translateX(-50%);
 }
