@@ -314,6 +314,30 @@ export default {
 
         this.countdownNumber = 3;
 
+        // Dark transparent overlay
+        this.countdownOverlay = this.add
+          .rectangle(
+            this.cameras.main.centerX,
+            this.cameras.main.centerY,
+            this.cameras.main.width,
+            this.cameras.main.height,
+            0x000000,
+            0.5,
+          )
+          .setDepth(999)
+          .setAlpha(0);
+        this.tweens.add({
+          targets: this.countdownOverlay,
+          alpha: 1,
+          duration: 400,
+          ease: "Quad.easeIn",
+        });
+
+        // Invisible placeholder (kept for cleanup compatibility)
+        this.countdownBg = this.add
+          .rectangle(0, 0, 0, 0, 0x000000, 0)
+          .setDepth(999);
+
         // "GET READY!" label
         this.countdownReadyImage = this.add
           .text(
@@ -365,9 +389,6 @@ export default {
           .setDepth(1001);
 
         // Invisible overlay placeholder (kept for cleanup in updateCountdown)
-        this.countdownOverlay = this.add
-          .rectangle(0, 0, 0, 0, 0x000000, 0)
-          .setDepth(999);
         this.countdownBg = this.add
           .rectangle(0, 0, 0, 0, 0x000000, 0)
           .setDepth(999);
@@ -455,7 +476,8 @@ export default {
         this.items.getChildren().forEach((item) => {
           const labelText = item.getData("labelText");
           if (labelText) {
-            labelText.setPosition(item.x, item.y);
+            const labelOffset = item.getData("labelOffset") || 0;
+            labelText.setPosition(item.x, item.y + labelOffset);
             if (item.y > this.cameras.main.height + 150) {
               labelText.destroy();
               item.setData("labelText", null);
@@ -475,27 +497,34 @@ export default {
         item.setData("type", randomItem.type);
 
         item.setOrigin(0.5);
-        item.setScale(gameConfig.objectScale || 0.9);
+        const sizeVariant = Phaser.Math.FloatBetween(0.7, 1.3);
+        const finalScale = (gameConfig.objectScale || 0.45) * sizeVariant;
+        item.setScale(finalScale);
+        item.setData("itemScale", finalScale);
 
         item.body.setAllowGravity(true);
         item.body.gravity.y = this.dropGravity;
         item.body.velocity.x = Phaser.Math.Between(-30, 30);
         item.setData("outOfBoundsKill", true);
 
-        // Add label text on bubble
+        // Add label text centered inside bubble
         if (randomItem.label) {
+          const bubbleDisplayWidth = item.width * finalScale;
+          const wrapWidth = bubbleDisplayWidth * 0.72;
           const labelText = this.add
             .text(randomX, -50, randomItem.label, {
               fontFamily: "Arial",
-              fontSize: "14px",
+              fontSize: "18px",
               color: "#7B0000",
-              fontStyle: "bold",
+              fontStyle: "normal",
               align: "center",
-              wordWrap: { width: 160 },
+              lineSpacing: 8,
+              wordWrap: { width: wrapWidth },
             })
-            .setOrigin(0.5)
+            .setOrigin(0.5, 0.5)
             .setDepth(10);
           item.setData("labelText", labelText);
+          item.setData("labelOffset", 0);
         }
       }
 
