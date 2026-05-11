@@ -475,7 +475,7 @@ export default {
         item.setData("type", randomItem.type);
 
         item.setOrigin(0.5);
-        const sizeVariant = Phaser.Math.FloatBetween(0.7, 1.3);
+        const sizeVariant = Phaser.Math.FloatBetween(0.9, 1.3);
         const finalScale = (gameConfig.objectScale || 0.45) * sizeVariant;
         item.setScale(finalScale);
         item.setData("itemScale", finalScale);
