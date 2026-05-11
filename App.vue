@@ -51,7 +51,7 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 50;
   overflow: hidden;
 }
 
