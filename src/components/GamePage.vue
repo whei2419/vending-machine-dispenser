@@ -31,9 +31,9 @@ import bgSoundFile from "@/assets/audio/bg.mp3";
 import buzzerSoundFile from "@/assets/audio/long-buzzer.mp3";
 import wrongSoundFile from "@/assets/audio/wrong item.mp3";
 
-import goodBubble1Img from "@/assets/images/fallingObjects/003_Good Bubble 01.webp";
-import goodBubble2Img from "@/assets/images/fallingObjects/003_Good Bubble 02.webp";
-import goodBubble3Img from "@/assets/images/fallingObjects/003_Good Bubble 03.webp";
+import goodBubble1Img from "@/assets/images/fallingObjects/good1.webp";
+import goodBubble2Img from "@/assets/images/fallingObjects/good2.webp";
+import goodBubble3Img from "@/assets/images/fallingObjects/good3.webp";
 import badBubbleImg from "@/assets/images/fallingObjects/003_Bad Bubble.webp";
 
 import explosionImg from "@/assets/images/exp.png";
@@ -147,21 +147,18 @@ export default {
             path: goodBubble1Img,
             type: "normal",
             points: gameConfig.appleScore,
-            label: "Micro-firming\nCapsules",
           },
           {
             key: "banana",
             path: goodBubble2Img,
             type: "normal",
             points: gameConfig.bananaScore,
-            label: "Collagen-rich\nSerum",
           },
           {
             key: "carrot",
             path: goodBubble3Img,
             type: "normal",
             points: gameConfig.carrotScore,
-            label: "Peony Extracts",
           },
           {
             key: "badBubble",
@@ -377,17 +374,6 @@ export default {
           .setOrigin(0.5)
           .setDepth(1001);
 
-        // Blue underline bar beneath the number
-        this.countdownUnderline = this.add
-          .rectangle(
-            this.cameras.main.centerX,
-            this.cameras.main.centerY + 80,
-            140,
-            7,
-            0x4fc3f7,
-          )
-          .setDepth(1001);
-
         // Invisible overlay placeholder (kept for cleanup in updateCountdown)
         this.countdownBg = this.add
           .rectangle(0, 0, 0, 0, 0x000000, 0)
@@ -405,7 +391,6 @@ export default {
                 this.countdownBg,
                 this.countdownReadyImage,
                 this.countdownText,
-                this.countdownUnderline,
               ],
               alpha: 0,
               duration: 100,
@@ -414,7 +399,6 @@ export default {
                 this.countdownBg.setVisible(false);
                 this.countdownReadyImage.setVisible(false);
                 this.countdownText.setVisible(false);
-                this.countdownUnderline.setVisible(false);
               },
             });
             this.countdownEvent.remove();
@@ -472,16 +456,10 @@ export default {
       }
 
       function update() {
-        // Move labels with their bubbles; clean up if off-screen
+        // Clean up off-screen items
         this.items.getChildren().forEach((item) => {
-          const labelText = item.getData("labelText");
-          if (labelText) {
-            const labelOffset = item.getData("labelOffset") || 0;
-            labelText.setPosition(item.x, item.y + labelOffset);
-            if (item.y > this.cameras.main.height + 150) {
-              labelText.destroy();
-              item.setData("labelText", null);
-            }
+          if (item.y > this.cameras.main.height + 150) {
+            item.destroy();
           }
         });
       }
@@ -506,26 +484,6 @@ export default {
         item.body.gravity.y = this.dropGravity;
         item.body.velocity.x = Phaser.Math.Between(-30, 30);
         item.setData("outOfBoundsKill", true);
-
-        // Add label text centered inside bubble
-        if (randomItem.label) {
-          const bubbleDisplayWidth = item.width * finalScale;
-          const wrapWidth = bubbleDisplayWidth * 0.72;
-          const labelText = this.add
-            .text(randomX, -50, randomItem.label, {
-              fontFamily: "Arial",
-              fontSize: "18px",
-              color: "#7B0000",
-              fontStyle: "normal",
-              align: "center",
-              lineSpacing: 8,
-              wordWrap: { width: wrapWidth },
-            })
-            .setOrigin(0.5, 0.5)
-            .setDepth(10);
-          item.setData("labelText", labelText);
-          item.setData("labelOffset", -4);
-        }
       }
 
       function updateTimer() {
@@ -651,26 +609,24 @@ export default {
             onComplete: () => scorePopup.destroy(),
           });
 
+          const bowlBaseScale = 0.4;
           this.tweens.add({
             targets: this.bowl,
-            scaleX: this.bowl.scaleX * 1.1,
-            scaleY: this.bowl.scaleY * 1.1,
+            scaleX: bowlBaseScale * 1.1,
+            scaleY: bowlBaseScale * 1.1,
             rotation: 0.1,
             yoyo: true,
             repeat: 0,
             duration: 200,
             ease: "Power1",
+            onComplete: () => {
+              this.bowl.setScale(bowlBaseScale);
+              this.bowl.setRotation(0);
+            },
           });
 
           item.setVisible(false);
           item.body.enable = false;
-
-          // Destroy label when caught
-          const labelText = item.getData("labelText");
-          if (labelText) {
-            labelText.destroy();
-            item.setData("labelText", null);
-          }
 
           this.time.delayedCall(400, () => {
             item.destroy();
