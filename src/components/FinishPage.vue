@@ -41,7 +41,7 @@ export default {
     let hoverTimer = null;
 
     const buttonText = computed(() => {
-      return "FINISH";
+      return "DONE";
     });
 
     const backgroundStyle = computed(() => {
@@ -104,62 +104,68 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60px 32px 60px;
+  padding: 60px 48px 220px;
   box-sizing: border-box;
 }
 
 .logo {
-  width: 220px;
-  margin-bottom: 24px;
+  width: 434px;
+  margin-bottom: 100px;
+  margin-top: 100px;
 }
 
 .title {
-  font-size: 38px;
+  font-size: 70px;
   color: #8b0000;
   font-weight: 900;
-  margin: 0 0 32px;
+  margin: 0 0 200px;
   text-align: center;
+  align-self: center;
   letter-spacing: 2px;
 }
 
 .score-card {
-  background: rgba(255, 255, 255, 0.75);
-  border-radius: 28px;
-  padding: 44px 52px;
+  background:
+    radial-gradient(ellipse at 40% 15%, rgba(255, 255, 255, 0.55) 0%, transparent 60%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.10) 100%);
+  border-radius: 36px;
+  padding: 52px 60px;
   text-align: center;
-  width: 360px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  width: 70%;
+  box-sizing: border-box;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10), 0 1.5px 0 rgba(255, 255, 255, 0.7) inset;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
 }
 
 .you-won {
-  font-size: 26px;
+  font-size: 70px;
   color: #8b0000;
   font-weight: 700;
-  margin: 0 0 12px;
+  margin: 0 0 90px;
 }
 
 .score-number {
-  font-size: 80px;
+  font-size: 150px;
   color: #8b0000;
   font-weight: 900;
-  margin: 0 0 4px;
+  margin: 0 0 10px;
   line-height: 1;
 }
 
 .score-label {
-  font-size: 18px;
+  font-size: 30px;
   color: #8b0000;
   font-weight: 400;
   text-transform: lowercase;
-  margin: 0 0 24px;
+  margin: 0 0 50px;
 }
 
 .score-message {
-  font-size: 14px;
+  font-size: 16px;
   color: #8b0000;
   font-weight: 400;
-  text-transform: none;
   margin: 0;
   line-height: 1.6;
 }
@@ -169,7 +175,10 @@ export default {
 }
 
 .buttoncontainer {
-  margin-top: auto;
+  position: absolute;
+  bottom: 200px;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: center;
 }
