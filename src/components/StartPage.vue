@@ -43,7 +43,10 @@ import logoImg from "@/assets/images/001_Logo.webp";
 import selectSoundFile from "@/assets/audio/select-sound.mp3";
 import completeSoundFile from "@/assets/audio/completed.mp3";
 
-const IDLE_TIMEOUT_MS = 5000;
+const savedCfg = localStorage.getItem("gameConfig");
+const IDLE_TIMEOUT_MS = savedCfg
+  ? (JSON.parse(savedCfg).idleTimeout ?? 30) * 1000
+  : 30000;
 
 export default {
   name: "StartPage",

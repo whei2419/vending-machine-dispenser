@@ -73,6 +73,15 @@
           </div>
         </div>
 
+        <div class="config-section">
+          <h2>Idle Settings</h2>
+          <div class="config-group">
+            <label for="idleTimeout">Idle Video Delay (seconds):</label>
+            <input type="number" id="idleTimeout" v-model.number="config.idleTimeout" min="5" max="300" step="5" />
+            <span class="help-text">Time before idle video appears on Start screen</span>
+          </div>
+        </div>
+
         <div class="button-group">
           <button type="submit" class="save-button">Save</button>
           <button type="button" class="reset-button" @click="resetToDefaults">
@@ -116,6 +125,7 @@ const DEFAULT_CONFIG = {
   minSpawnDelay: 600,
   initialGravity: 300,
   maxGravity: 900,
+  idleTimeout: 30,
 };
 
 const config = ref({ ...DEFAULT_CONFIG });
