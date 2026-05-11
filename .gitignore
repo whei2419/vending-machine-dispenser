@@ -16,3 +16,6 @@ src-tauri/Cargo.lock
 # Build outputs
 dist/
 build/
+
+# Video assets
+src/assets/video/

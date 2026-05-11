@@ -342,7 +342,7 @@ export default {
         this.countdownReadyImage = this.add
           .text(
             this.cameras.main.centerX,
-            this.cameras.main.centerY - 120,
+            this.cameras.main.centerY - 200,
             "GET READY!",
             {
               fontFamily: "Arial, sans-serif",
@@ -369,9 +369,9 @@ export default {
             "3",
             {
               fontFamily: "Arial, sans-serif",
-              fontSize: "220px",
+              fontSize: "120px",
               color: "#FFFFFF",
-              fontStyle: "bold",
+              fontStyle: "normal",
             },
           )
           .setOrigin(0.5)
@@ -381,7 +381,7 @@ export default {
         this.countdownUnderline = this.add
           .rectangle(
             this.cameras.main.centerX,
-            this.cameras.main.centerY + 145,
+            this.cameras.main.centerY + 80,
             140,
             7,
             0x4fc3f7,
@@ -524,7 +524,7 @@ export default {
             .setOrigin(0.5, 0.5)
             .setDepth(10);
           item.setData("labelText", labelText);
-          item.setData("labelOffset", 0);
+          item.setData("labelOffset", -4);
         }
       }
 
@@ -632,13 +632,13 @@ export default {
           }
 
           const scoreText = points > 0 ? `+${points}` : `${points}`;
-          const scoreColor = points > 0 ? "#063591" : "#FF0000";
+          const scoreColor = points > 0 ? "#7B0000" : "#7B0000";
           const scorePopup = this.add
             .text(item.x, item.y, scoreText, {
               fontFamily: "Arial",
-              fontSize: "40px",
+              fontSize: "20px",
               color: scoreColor,
-              fontStyle: "bold",
+              fontStyle: "normal",
             })
             .setOrigin(0.5)
             .setDepth(102);
