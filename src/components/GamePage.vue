@@ -257,6 +257,7 @@ export default {
         const playerSizePx = gameConfig.playerSize || 200;
         const bowlNativeW = this.textures.get("bowl").getSourceImage().width;
         this.bowl.setScale(playerSizePx / bowlNativeW);
+        this.bowlBaseScale = playerSizePx / bowlNativeW;
         const bowlWidth = this.bowl.displayWidth;
         const bowlHeight = this.bowl.displayHeight;
 
@@ -798,19 +799,20 @@ export default {
           });
 
           // ── Bowl bounce ──
-          const bowlBaseScaleX = this.bowl.scaleX;
-          const bowlBaseScaleY = this.bowl.scaleY;
+          const bowlBaseScale = this.bowlBaseScale;
+          this.tweens.killTweensOf(this.bowl);
+          this.bowl.setScale(bowlBaseScale);
           this.tweens.add({
             targets: this.bowl,
-            scaleX: bowlBaseScaleX * 1.1,
-            scaleY: bowlBaseScaleY * 1.1,
+            scaleX: bowlBaseScale * 1.1,
+            scaleY: bowlBaseScale * 1.1,
             rotation: 0.1,
             yoyo: true,
             repeat: 0,
             duration: 200,
             ease: "Power1",
             onComplete: () => {
-              this.bowl.setScale(bowlBaseScaleX, bowlBaseScaleY);
+              this.bowl.setScale(bowlBaseScale);
               this.bowl.setRotation(0);
             },
           });

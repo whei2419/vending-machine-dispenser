@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useFullscreen } from "@/composables/useFullscreen";
 import bgEnglish from "@/assets/images/startPage.webp";
@@ -119,6 +119,17 @@ export default {
         selectedLang.value = "chinese";
       }
       startIdleTimer();
+    });
+
+    watch(isIdle, (val) => {
+      if (val) {
+        nextTick(() => {
+          if (idleVideo.value) {
+            idleVideo.value.currentTime = 0;
+            idleVideo.value.play();
+          }
+        });
+      }
     });
 
     onUnmounted(() => {
