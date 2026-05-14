@@ -24,7 +24,7 @@ import Phaser from "phaser";
 import mainBg from "@/assets/images/plain.webp";
 
 // Import all game assets
-import collectSoundFile from "@/assets/audio/collect bird nest.mp3";
+import collectSoundFile from "@/assets/audio/universfield-bubble-pop-06-351337.mp3";
 import winSoundFile from "@/assets/audio/game won.mp3";
 import countDownSoundFile from "@/assets/audio/countdownsound.mp3";
 import bgSoundFile from "@/assets/audio/bg.mp3";
