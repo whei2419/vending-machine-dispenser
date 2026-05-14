@@ -17,7 +17,9 @@ function getConfig() {
     bananaScore: 10,
     carrotScore: 10,
     // egg and milk removed
-    objectScale: 0.9,
+    objectScaleMin: 0.6,
+    objectScaleMax: 1.2,
+    playerScale: 0.4,
     negativeScore: -1,
     winScore: 20,
     gameTimer: 30,
@@ -206,7 +208,7 @@ function preload() {
 
     // Set up bowl and enable physics
     this.bowl = this.add.sprite(0, -40, "bowl").setOrigin(0.5); // Adjust this Y value to move the bowl down
-    this.bowl.setScale(0.4);
+    this.bowl.setScale(gameConfig.playerScale || 0.4);
     const bowlWidth = this.bowl.displayWidth;
     const bowlHeight = this.bowl.displayHeight;
 
@@ -484,13 +486,15 @@ function preload() {
       callbackScope: this,
       loop: false,
     });
-    this.bowl.setScale(0.4);
+    this.bowl.setScale(gameConfig.playerScale || 0.4);
 
     // Spawn a random object from all types (normal, negative, special)
     var randomItem = Phaser.Math.RND.pick(this.fallingObjects);
 
     // Calculate item width for safe spawn using the render scale
-    const itemRenderScale = (gameConfig && gameConfig.objectScale) ? gameConfig.objectScale : 0.9; // configurable visual size
+    const scaleMin = (gameConfig && gameConfig.objectScaleMin != null) ? gameConfig.objectScaleMin : 0.6;
+    const scaleMax = (gameConfig && gameConfig.objectScaleMax != null) ? gameConfig.objectScaleMax : 1.2;
+    const itemRenderScale = scaleMin + Math.random() * (scaleMax - scaleMin); // random size between min and max
     const texture = this.textures.get(randomItem.key);
     const frame = texture.getSourceImage ? texture.getSourceImage() : null;
     const itemWidth = frame

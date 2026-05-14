@@ -89,7 +89,9 @@ export default {
         bananaScore: 1000,
         carrotScore: 1000,
         // egg and milk removed
-        objectScale: 0.45,
+        objectSizeMin: 150,
+        objectSizeMax: 300,
+        playerSize: 200,
         negativeScore: -1,
         winScore: 20,
         gameTimer: 30,
@@ -252,7 +254,9 @@ export default {
           .setAlpha(0);
 
         this.bowl = this.add.sprite(0, -40, "bowl").setOrigin(0.5);
-        this.bowl.setScale(0.4);
+        const playerSizePx = gameConfig.playerSize || 200;
+        const bowlNativeW = this.textures.get("bowl").getSourceImage().width;
+        this.bowl.setScale(playerSizePx / bowlNativeW);
         const bowlWidth = this.bowl.displayWidth;
         const bowlHeight = this.bowl.displayHeight;
 
@@ -507,10 +511,12 @@ export default {
         item.setData("type", randomItem.type);
 
         item.setOrigin(0.5);
-        const sizeVariant = Phaser.Math.FloatBetween(0.9, 1.3);
-        const finalScale = (gameConfig.objectScale || 0.45) * sizeVariant;
-        item.setScale(finalScale);
-        item.setData("itemScale", finalScale);
+        const sizePx = Phaser.Math.Between(
+          gameConfig.objectSizeMin != null ? gameConfig.objectSizeMin : 150,
+          gameConfig.objectSizeMax != null ? gameConfig.objectSizeMax : 300
+        );
+        item.setDisplaySize(sizePx, sizePx);
+        item.setData("itemScale", item.scaleX);
 
         item.body.setAllowGravity(true);
         item.body.gravity.y = this.dropGravity;
@@ -792,18 +798,19 @@ export default {
           });
 
           // ── Bowl bounce ──
-          const bowlBaseScale = 0.4;
+          const bowlBaseScaleX = this.bowl.scaleX;
+          const bowlBaseScaleY = this.bowl.scaleY;
           this.tweens.add({
             targets: this.bowl,
-            scaleX: bowlBaseScale * 1.1,
-            scaleY: bowlBaseScale * 1.1,
+            scaleX: bowlBaseScaleX * 1.1,
+            scaleY: bowlBaseScaleY * 1.1,
             rotation: 0.1,
             yoyo: true,
             repeat: 0,
             duration: 200,
             ease: "Power1",
             onComplete: () => {
-              this.bowl.setScale(bowlBaseScale);
+              this.bowl.setScale(bowlBaseScaleX, bowlBaseScaleY);
               this.bowl.setRotation(0);
             },
           });

@@ -1,9 +1,5 @@
 <template>
   <div class="config-page" :style="backgroundStyle">
-    <img :src="logoSrc" alt="Logo" class="logo" />
-
-    <h1 class="title">GAME SETTINGS</h1>
-
     <div class="config-container">
 
       <form @submit.prevent="saveConfiguration">
@@ -40,9 +36,22 @@
             <input type="number" id="gameTimer" v-model.number="config.gameTimer" min="10" max="300" />
           </div>
           <div class="config-group">
-            <label for="objectScale">Object Scale (0.1 - 2.0):</label>
-            <input type="number" id="objectScale" v-model.number="config.objectScale" min="0.1" max="2" step="0.05" />
-            <span class="help-text">Visual scale applied to falling objects</span>
+            <label for="objectSizeMin">Object Size Min (px):</label>
+            <input type="number" id="objectSizeMin" v-model.number="config.objectSizeMin" min="50" max="800" step="10"
+              placeholder="150" />
+            <span class="help-text">Smallest possible size for falling objects</span>
+          </div>
+          <div class="config-group">
+            <label for="objectSizeMax">Object Size Max (px):</label>
+            <input type="number" id="objectSizeMax" v-model.number="config.objectSizeMax" min="50" max="800" step="10"
+              placeholder="300" />
+            <span class="help-text">Largest possible size for falling objects</span>
+          </div>
+          <div class="config-group">
+            <label for="playerSize">Player Size (px):</label>
+            <input type="number" id="playerSize" v-model.number="config.playerSize" min="50" max="800" step="10"
+              placeholder="200" />
+            <span class="help-text">Size of the player (bottle) in pixels</span>
           </div>
         </div>
 
@@ -117,7 +126,9 @@ const DEFAULT_CONFIG = {
   appleScore: 1000,
   bananaScore: 1000,
   carrotScore: 1000,
-  objectScale: 0.45,
+  objectSizeMin: 150,
+  objectSizeMax: 300,
+  playerSize: 200,
   negativeScore: -1000,
   winScore: 24000,
   gameTimer: 30,
