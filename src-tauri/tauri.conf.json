@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
-  "productName": "Vending Machine Dispenser",
+  "productName": "laneige Bouncy Skin",
   "version": "1.0.0",
   "identifier": "com.vendingmachine.app",
   "build": {
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Vending Machine Dispenser",
+        "title": "laneige Bouncy Skin",
         "width": 1080,
         "height": 1920,
         "fullscreen": false,
