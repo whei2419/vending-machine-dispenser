@@ -4,7 +4,7 @@
     <!-- Idle video overlay -->
     <Transition name="idle-fade">
       <div v-if="isIdle" class="idle-overlay" @click="resetIdleTimer" @touchstart="resetIdleTimer">
-        <video ref="idleVideo" class="idle-video" src="@/assets/video/idlevideo.mp4" autoplay loop playsinline />
+        <video ref="idleVideo" class="idle-video" src="@/assets/video/idlevideo.mp4" autoplay loop playsinline @timeupdate="onVideoTimeUpdate" @ended="onVideoEnded" />
       </div>
     </Transition>
 
@@ -121,12 +121,27 @@ export default {
       startIdleTimer();
     });
 
+    const onVideoTimeUpdate = () => {
+      const video = idleVideo.value;
+      if (video && video.duration && video.currentTime >= video.duration - 0.1) {
+        video.currentTime = 0;
+        video.play().catch(() => {});
+      }
+    };
+
+    const onVideoEnded = () => {
+      if (idleVideo.value) {
+        idleVideo.value.currentTime = 0;
+        idleVideo.value.play().catch(() => {});
+      }
+    };
+
     watch(isIdle, (val) => {
       if (val) {
         nextTick(() => {
           if (idleVideo.value) {
             idleVideo.value.currentTime = 0;
-            idleVideo.value.play();
+            idleVideo.value.play().catch(() => {});
           }
         });
       }
@@ -141,6 +156,8 @@ export default {
       isLoading,
       isIdle,
       idleVideo,
+      onVideoTimeUpdate,
+      onVideoEnded,
       buttonText,
       backgroundStyle,
       logoSrc,
